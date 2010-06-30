@@ -454,7 +454,17 @@
 
 	<!-- Displayed in the notification bar that connections are active -->
 	<string name="app_is_running">ConnectBot is running</string>
-
+	
+	 <!-- Swipe type -->
+	<string name="pref_swipe_title">Swipe Left/Right</string>
+	<string name="pref_swipe_summary">Defines swipe type</string>
+	<string name="list_swipe_default">Default</string>
+	<string name="list_swipe_irssi_channel">Irssi channel swipe</string>
+	<string name="list_swipe_irssi_channel_inverted">Irssi channel swipe (inverted)</string>
+	
+	<!-- Long press menu -->
+	<string name="pref_longpressmenu_title">Long press menu</string>
+	<string name="pref_longpressmenu_summary">Enables long press menu</string>
 	<string name="color_red">red</string>
 	<string name="color_green">green</string>
 	<string name="color_blue">blue</string>

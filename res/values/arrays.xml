@@ -139,5 +139,16 @@
 		<item>del</item>
 		<item>backspace</item>
 	</string-array>
-
+	
+ 	<string-array name="list_swipe_select">
+		<item>@string/list_swipe_default</item>
+		<item>@string/list_swipe_irssi_channel</item>
+		<item>@string/list_swipe_irssi_channel_inverted</item>
+	</string-array>
+	
+	<string-array name="list_swipe_select_values">
+		<item>default</item>
+		<item>channel_swipe</item>
+		<item>channel_swipe_inverted</item>
+	</string-array>
 </resources>
