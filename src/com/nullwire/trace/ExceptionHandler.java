@@ -14,7 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.connectbot.R;
+import org.woltage.irssiconnectbot.R;
 
 import android.app.AlertDialog;
 import android.content.Context;

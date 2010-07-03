@@ -133,7 +133,7 @@
 			android:defaultValue="true"
 			/>
 
-		<org.connectbot.util.VolumePreference
+		<org.woltage.irssiconnectbot.util.VolumePreference
 			android:key="bellVolume"
 			android:title="@string/pref_bell_volume_title"
 			/>

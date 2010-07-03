@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.connectbot"
 	android:versionName="1.7-dev"
-	android:versionCode="265">
+	android:versionCode="266" package="org.woltage.irssiconnectbot">
 
 	<application
 		android:icon="@drawable/icon"
@@ -30,7 +29,7 @@
 		<activity android:name=".HelpTopicActivity" android:configChanges="keyboardHidden|orientation" />
 		<activity android:name=".ColorsActivity" android:configChanges="keyboardHidden|orientation" />
 
-		<service android:name="org.connectbot.service.TerminalManager" android:configChanges="keyboardHidden|orientation" />
+		<service android:configChanges="keyboardHidden|orientation" android:name="org.woltage.irssiconnectbot.service.TerminalManager"/>
 
 		<activity android:name=".ConsoleActivity" android:configChanges="keyboardHidden|orientation"
 			android:theme="@style/NoTitle" android:windowSoftInputMode="stateAlwaysVisible|adjustResize"

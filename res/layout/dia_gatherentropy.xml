@@ -33,7 +33,7 @@
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:gravity="center"/>
 
-	<org.connectbot.util.EntropyView
+	<org.woltage.irssiconnectbot.util.EntropyView
 		android:id="@+id/entropy"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
