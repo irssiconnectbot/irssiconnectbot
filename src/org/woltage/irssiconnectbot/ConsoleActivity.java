@@ -484,7 +484,13 @@ public class ConsoleActivity extends Activity {
 					@Override
 					public void onLongPress(MotionEvent e) {
 						if(prefs.getBoolean("longPressMenu", false)) {
-							final CharSequence[] items = { "Ctrl+a", "Ctrl+ad", "Alt+a", "None" };
+							View flip = findCurrentView(R.id.console_flip);
+							if (flip == null) return;
+							TerminalView terminal = (TerminalView) flip;
+
+							terminal.bridge.tryKeyVibrate();
+
+							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a+d", "Ctrl+d" };
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(ConsoleActivity.this);
 							builder.setTitle("Send a action");
@@ -496,13 +502,18 @@ public class ConsoleActivity extends Activity {
 											TerminalView terminal = (TerminalView) flip;
 
 											if (item == 0) {
-												((vt320) terminal.bridge.buffer).write(0x01);
+												((vt320) terminal.bridge.buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
+												terminal.bridge.tryKeyVibrate();
 											} else if (item == 1) {
+												((vt320) terminal.bridge.buffer).write(0x09);
+												terminal.bridge.tryKeyVibrate();
+											} else if (item == 2) {
 												((vt320) terminal.bridge.buffer).write(0x01);
 												((vt320) terminal.bridge.buffer).write('d');
-											} else if (item == 2) {
-												((vt320) terminal.bridge.buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
-												((vt320) terminal.bridge.buffer).keyTyped(vt320.NORMAL, 'a', 0);
+												terminal.bridge.tryKeyVibrate();
+											} else if (item == 3) {
+												((vt320) terminal.bridge.buffer).write(0x04);
+												terminal.bridge.tryKeyVibrate();
 											}
 										}
 									});
@@ -984,6 +995,7 @@ public class ConsoleActivity extends Activity {
 			}
 
 			((vt320)terminal.bridge.buffer).keyPressed(keyCode, ' ', 0);
+			terminal.bridge.tryKeyVibrate();
 		}
 	}
 
