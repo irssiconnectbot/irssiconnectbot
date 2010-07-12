@@ -158,13 +158,13 @@
 		android:entries="@array/list_swipe_select"
 		android:entryValues="@array/list_swipe_select_values"
 		android:summary="@string/pref_swipe_summary"
-		android:defaultValue="default"
+		android:defaultValue="channel_swipe_inverted"
 		/>
 	
 	<CheckBoxPreference
 		android:key="longPressMenu"
 		android:title="@string/pref_longpressmenu_title"
 		android:summary="@string/pref_longpressmenu_summary"
-		android:defaultValue="false"
+		android:defaultValue="true"
 		/>
 </PreferenceScreen>

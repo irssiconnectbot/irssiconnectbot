@@ -493,7 +493,7 @@ public class ConsoleActivity extends Activity {
 							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a+d", "Ctrl+d" };
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(ConsoleActivity.this);
-							builder.setTitle("Send a action");
+							builder.setTitle("Send an action");
 							builder.setItems(items,
 									new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int item) {
