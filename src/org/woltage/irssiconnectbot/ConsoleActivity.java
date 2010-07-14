@@ -490,7 +490,7 @@ public class ConsoleActivity extends Activity {
 
 							terminal.bridge.tryKeyVibrate();
 
-							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a+d", "Ctrl+d" };
+							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a+d", "Ctrl+d", "Ctrl+c" };
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(ConsoleActivity.this);
 							builder.setTitle("Send an action");
@@ -513,6 +513,9 @@ public class ConsoleActivity extends Activity {
 												terminal.bridge.tryKeyVibrate();
 											} else if (item == 3) {
 												((vt320) terminal.bridge.buffer).write(0x04);
+												terminal.bridge.tryKeyVibrate();
+											} else if (item == 4) {
+												((vt320) terminal.bridge.buffer).write(0x03);
 												terminal.bridge.tryKeyVibrate();
 											}
 										}
@@ -978,8 +981,6 @@ public class ConsoleActivity extends Activity {
 			if(flip == null) return;
 			TerminalView terminal = (TerminalView)flip;
 
-			((vt320)terminal.bridge.buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
-
 			if(direction == SHIFT_LEFT) {
 				if(prefs.getString("swipe", "").equals("channel_swipe_inverted")) {
 					keyCode = vt320.KEY_RIGHT;
@@ -994,7 +995,11 @@ public class ConsoleActivity extends Activity {
 				}
 			}
 
-			((vt320)terminal.bridge.buffer).keyPressed(keyCode, ' ', 0);
+			if(keyCode == vt320.KEY_RIGHT) {
+				((vt320)terminal.bridge.buffer).write(0x0E);
+			} else if (keyCode == vt320.KEY_LEFT) {
+				((vt320)terminal.bridge.buffer).write(0x10);
+			}
 			terminal.bridge.tryKeyVibrate();
 		}
 	}
