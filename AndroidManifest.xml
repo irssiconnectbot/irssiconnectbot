@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:versionName="1.7-dev"
-	package="org.woltage.irssiconnectbot" android:versionCode="270">
+	android:versionName="1.7.0-rc1"
+	android:versionCode="271"
+	android:installLocation="auto" package="org.woltage.irssiconnectbot">
 
 	<application
 		android:icon="@drawable/icon"
@@ -32,7 +33,9 @@
 		<activity android:name=".HelpTopicActivity" android:configChanges="keyboardHidden|orientation" />
 		<activity android:name=".ColorsActivity" android:configChanges="keyboardHidden|orientation" />
 
-		<service android:configChanges="keyboardHidden|orientation" android:name="org.woltage.irssiconnectbot.service.TerminalManager"/>
+		<service android:name="org.woltage.irssiconnectbot.service.TerminalManager"
+			android:configChanges="keyboardHidden|orientation"
+			android:description="@string/service_desc" />
 
 		<activity android:name=".ConsoleActivity" android:configChanges="keyboardHidden|orientation"
 			android:theme="@style/NoTitle" android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
@@ -52,7 +55,7 @@
 
 	</application>
 
-	<uses-sdk android:targetSdkVersion="6" android:minSdkVersion="3" />
+	<uses-sdk android:targetSdkVersion="8" android:minSdkVersion="3" />
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />

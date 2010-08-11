@@ -74,7 +74,7 @@
 			android:summary="@string/pref_rotation_summary"
 			android:entries="@array/list_rotation"
 			android:entryValues="@array/list_rotation_values"
-			android:defaultValue="Default"
+			android:defaultValue="Automatic"
 			/>
 
 		<CheckBoxPreference

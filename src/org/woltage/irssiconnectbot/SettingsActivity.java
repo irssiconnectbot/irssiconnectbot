@@ -32,7 +32,6 @@ public class SettingsActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			Log.w(TAG, "TESTI");
 			addPreferencesFromResource(R.xml.preferences);
 		} catch (ClassCastException e) {
 			Log.e(TAG, "Shared preferences are corrupt! Resetting to default values.");
