@@ -459,12 +459,12 @@
 	<string name="menu_colors_reset">"Reset"</string>
 
 	<!-- Displayed in the notification bar that connections are active -->
-        <string name="app_is_running">"Irssi ConnectBot is running"</string>
+    <string name="app_is_running">"Irssi ConnectBot is running"</string>
         
-        <string name="color_red">"red"</string>
-        <string name="color_green">"green"</string>
-        <string name="color_blue">"blue"</string>
-        <string name="color_gray">"gray"</string>
+    <string name="color_red">"red"</string>
+    <string name="color_green">"green"</string>
+    <string name="color_blue">"blue"</string>
+    <string name="color_gray">"gray"</string>
 	
 	 <!-- Swipe type -->
 	<string name="pref_swipe_title">Swipe Left/Right</string>
@@ -476,8 +476,4 @@
 	<!-- Long press menu -->
 	<string name="pref_longpressmenu_title">Long press menu</string>
 	<string name="pref_longpressmenu_summary">Enables long press menu</string>
-	<string name="color_red">red</string>
-	<string name="color_green">green</string>
-	<string name="color_blue">blue</string>
-	<string name="color_gray">gray</string>
 </resources>
