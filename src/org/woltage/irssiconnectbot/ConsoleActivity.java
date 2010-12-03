@@ -518,7 +518,7 @@ public class ConsoleActivity extends Activity {
 
 							terminal.bridge.tryKeyVibrate();
 
-							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c", "<", ">" };
+							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c", "<", ">", "|" };
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(ConsoleActivity.this);
 							builder.setTitle("Send an action");
@@ -553,6 +553,9 @@ public class ConsoleActivity extends Activity {
 												terminal.bridge.tryKeyVibrate();
 											} else if (item == 7) {
 												((vt320) terminal.bridge.buffer).write(0x3E);
+												terminal.bridge.tryKeyVibrate();
+											} else if (item == 8) {
+												((vt320) terminal.bridge.buffer).write('|');
 												terminal.bridge.tryKeyVibrate();
 											}
 										}
