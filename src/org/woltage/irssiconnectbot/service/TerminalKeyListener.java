@@ -210,18 +210,32 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 						&& sendFunctionKey(keyCode))
 					return true;
 
-				if (key < 0x80)
+				if (key < 0x80) {
 					bridge.transport.write(key);
-				else
+				} else {
 					// TODO write encoding routine that doesn't allocate each time
-					bridge.transport.write(new String(Character.toChars(key))
-							.getBytes(encoding));
+
+					if(prefs.getBoolean("htcDesireZ", false)) {
+						// Desire Z, force lowercase! Problem with HW keymapping?
+						if(key == 0xc4)
+							key = 0xe4;
+						if(key == 0xd6)
+							key = 0xf6;
+						if(key == 0xc5)
+							key = 0xe5;
+						if(key == 0xd8)
+							key = 0xf8;
+						if(key == 0xc6)
+							key = 0xe6;
+					}
+
+					bridge.transport.write(new String(Character.toChars(key)).getBytes(encoding));
+				}
 
 				return true;
 			}
 
-			if (keyCode == KeyEvent.KEYCODE_UNKNOWN &&
-					event.getAction() == KeyEvent.ACTION_MULTIPLE) {
+			if (keyCode == KeyEvent.KEYCODE_UNKNOWN && event.getAction() == KeyEvent.ACTION_MULTIPLE) {
 				byte[] input = event.getCharacters().getBytes(encoding);
 				bridge.transport.write(input);
 				return true;

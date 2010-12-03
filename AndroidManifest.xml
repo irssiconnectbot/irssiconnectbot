@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	android:versionName="1.7.1-irssi"
-	android:versionCode="374"
-	android:installLocation="auto" package="org.woltage.irssiconnectbot">
+	android:installLocation="auto" package="org.woltage.irssiconnectbot" android:versionCode="375">
 
 	<application
 		android:icon="@drawable/icon"

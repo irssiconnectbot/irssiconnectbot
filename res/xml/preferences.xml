@@ -167,4 +167,11 @@
 		android:summary="@string/pref_longpressmenu_summary"
 		android:defaultValue="true"
 		/>
+		
+	<CheckBoxPreference
+		android:key="htcDesireZ"
+		android:title="@string/pref_htcdesirez_title"
+		android:summary="@string/pref_htcdesirez_summary"
+		android:defaultValue="false"
+		/>
 </PreferenceScreen>
