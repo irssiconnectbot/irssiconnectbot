@@ -1,7 +1,7 @@
 /*
  * This file is part of "JTA - Telnet/SSH for the JAVA(tm) platform".
  *
- * (c) Matthias L. Jugel, Marcus Mei�ner 1996-2005. All Rights Reserved.
+ * (c) Matthias L. Jugel, Marcus Meissner 1996-2005. All Rights Reserved.
  *
  * Please visit http://javatelnet.org/ for updates and contact.
  *
@@ -32,7 +32,7 @@ import java.util.Arrays;
  * all methods to manipulate the buffer that stores characters and their
  * attributes as well as the regions displayed.
  *
- * @author Matthias L. Jugel, Marcus Meißner
+ * @author Matthias L. Jugel, Marcus Meissner
  * @version $Id: VDUBuffer.java 503 2005-10-24 07:34:13Z marcus $
  */
 public class VDUBuffer {

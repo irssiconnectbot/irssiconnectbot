@@ -1,7 +1,7 @@
 /*
  * This file is part of "JTA - Telnet/SSH for the JAVA(tm) platform".
  *
- * (c) Matthias L. Jugel, Marcus Meiner 1996-2005. All Rights Reserved.
+ * (c) Matthias L. Jugel, Marcus Meissner 1996-2005. All Rights Reserved.
  *
  * Please visit http://javatelnet.org/ for updates and contact.
  *
@@ -32,10 +32,10 @@ import java.util.Properties;
 /**
  * Implementation of a VT terminal emulation plus ANSI compatible.
  * <P>
- * <B>Maintainer:</B> Marcus Meißner
+ * <B>Maintainer:</B> Marcus Meissner
  *
  * @version $Id: vt320.java 507 2005-10-25 10:14:52Z marcus $
- * @author  Matthias L. Jugel, Marcus Meißner
+ * @author  Matthias L. Jugel, Marcus Meissner
  */
 public abstract class vt320 extends VDUBuffer implements VDUInput {
 
