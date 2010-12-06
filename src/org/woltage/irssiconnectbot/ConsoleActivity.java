@@ -698,6 +698,7 @@ public class ConsoleActivity extends Activity {
 		super.onCreateOptionsMenu(menu);
 
 		View view = findCurrentView(R.id.console_flip);
+		final TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
 		final boolean activeTerminal = (view instanceof TerminalView);
 		boolean sessionOpen = false;
 		boolean disconnected = false;
@@ -819,24 +820,13 @@ public class ConsoleActivity extends Activity {
 		resize.setEnabled(sessionOpen);
 		resize.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
-				final TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
+				int width = new Integer(prefs.getString("force_width", ""));
+				int height = new Integer(prefs.getString("force_height", ""));
 
-				final View resizeView = inflater.inflate(R.layout.dia_resize, null, false);
-				new AlertDialog.Builder(ConsoleActivity.this).setView(resizeView).setPositiveButton(R.string.button_resize,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,int which) {
-								int width, height;
-								try {
-									width = Integer.parseInt(((EditText) resizeView.findViewById(R.id.width)).getText().toString());
-									height = Integer.parseInt(((EditText) resizeView.findViewById(R.id.height)).getText().toString());
-								} catch (NumberFormatException nfe) {
-									// TODO change this to a real dialog where we can make the input boxes turn red to indicate an error.
-									return;
-								}
-
-								terminalView.forceSize(width, height);
-							}
-						}).setNegativeButton(android.R.string.cancel, null).create().show();
+				if(width > 0 && height > 0) {
+					terminalView.forceSize(width, height);
+					terminalView.forceSize(width, height);
+				}
 
 				return true;
 			}

@@ -174,4 +174,16 @@
 		android:summary="@string/pref_htcdesirez_summary"
 		android:defaultValue="false"
 		/>
+		
+	<PreferenceCategory
+		android:title="@string/pref_force_size">		
+		<EditTextPreference
+	   		android:key="force_width"
+	   		android:title="@string/force_size_width"
+	   		/>
+		<EditTextPreference
+	   		android:key="force_height"
+	   		android:title="@string/force_size_height"
+	   		/>
+   	</PreferenceCategory>
 </PreferenceScreen>
