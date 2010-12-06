@@ -215,8 +215,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				} else {
 					// TODO write encoding routine that doesn't allocate each time
 
-					if(prefs.getBoolean("htcDesireZ", false)) {
-						// Desire Z, force lowercase! Problem with HW keymapping?
+					if(prefs.getBoolean("htcDesireZ", false) && curMetaState == 0) {
+						// Desire Z, lowercase if curMetaState == 0! Problem with HW keymapping?
 						if(key == 0xc4)
 							key = 0xe4;
 						if(key == 0xd6)
