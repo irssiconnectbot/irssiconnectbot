@@ -518,7 +518,7 @@ public class ConsoleActivity extends Activity {
 
 							terminal.bridge.tryKeyVibrate();
 
-							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c", "<", ">", "|", "[", "]", "{", "}", "" };
+							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c", "<", ">", "|", "[", "]", "{", "}", "^" };
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(ConsoleActivity.this);
 							builder.setTitle("Send an action");
@@ -835,12 +835,17 @@ public class ConsoleActivity extends Activity {
 		resize.setEnabled(sessionOpen);
 		resize.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
-				int width = new Integer(prefs.getString("force_width", ""));
-				int height = new Integer(prefs.getString("force_height", ""));
+				int width = new Integer(prefs.getString("force_width", "0"));
+				int height = new Integer(prefs.getString("force_height", "0"));
 
 				if(width > 0 && height > 0) {
 					terminalView.forceSize(width, height);
 					terminalView.forceSize(width, height);
+				} else {
+					new AlertDialog.Builder(ConsoleActivity.this)
+						.setMessage("Goto settings and add width/height values.")
+						.setTitle("No configuration")
+						.show();
 				}
 
 				return true;
