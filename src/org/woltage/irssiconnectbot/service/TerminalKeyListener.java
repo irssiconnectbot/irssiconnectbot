@@ -244,6 +244,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			// try handling keymode shortcuts
 			if (hardKeyboard && !hardKeyboardHidden &&
 					event.getRepeatCount() == 0) {
+
+				// Fix for Desire Z TAB key, keyCode == 20
+				if(prefs.getBoolean("htcDesireZ", false) && keyCode == 20) {
+					bridge.transport.write(0x09);
+					return true;
+				}
+
 				if (PreferenceConstants.KEYMODE_RIGHT.equals(keymode)) {
 					switch (keyCode) {
 					case KeyEvent.KEYCODE_ALT_RIGHT:
