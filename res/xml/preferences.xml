@@ -168,10 +168,12 @@
 		android:defaultValue="true"
 		/>
 		
-	<CheckBoxPreference
+	<ListPreference
 		android:key="htcDesireZ"
 		android:title="@string/pref_htcdesirez_title"
 		android:summary="@string/pref_htcdesirez_summary"
+		android:entries="@array/list_desirez_fixes"
+		android:entryValues="@array/list_desirez_fixes_values"
 		android:defaultValue="false"
 		/>
 		

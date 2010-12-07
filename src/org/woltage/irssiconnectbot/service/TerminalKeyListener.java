@@ -213,22 +213,53 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				if (key < 0x80) {
 					bridge.transport.write(key);
 				} else {
-					// TODO write encoding routine that doesn't allocate each time
 
-					if(prefs.getBoolean("htcDesireZ", false) && curMetaState == 0) {
-						// Desire Z, lowercase if curMetaState == 0! Problem with HW keymapping?
-						if(key == 0xc4)
-							key = 0xe4;
-						if(key == 0xd6)
-							key = 0xf6;
-						if(key == 0xc5)
-							key = 0xe5;
-						if(key == 0xd8)
-							key = 0xf8;
-						if(key == 0xc6)
-							key = 0xe6;
+					// HTC Desire Z fixes
+					if(!prefs.getString("htcDesireZ", "false").equals("false")) {
+						/*
+						 * curMetaState == 0 normal mode
+						 * curMetaState == 1 if shift key is pressed or locked
+						 * curMetaState == 2 if FN key is pressed or locked
+						 * curMetaState == 3 if FN OR shift key is pressed or locked
+						 */
+						if(curMetaState == 0) {
+							// Desire Z, lowercase if curMetaState == 0! Problem with HW keymapping?
+							if(key == 0xc4) //Ä
+								key = 0xe4; //ä
+							else if(key == 0xd6) //Ö
+								key = 0xf6; //ö
+							else if(key == 0xc5) //Å
+								key = 0xe5; //å
+							else if(key == 0xd8) { //Ø
+								if(prefs.getString("htcDesireZ", "false").equals("true")){ // Bind's Ø to CTRL
+									metaPress(META_CTRL_ON);
+									bridge.redraw();
+									return true;
+								}else{
+									key = 0xf8; //ø
+								}
+							} else if(key == 0xc6) { //Æ
+								if(prefs.getString("htcDesireZ", "false").equals("true")){ // Bind's Æ to ALT
+									sendEscape();
+									bridge.redraw();
+									return true;
+								}else{
+									key = 0xe6; //æ
+								}
+							}
+						}
+						else if(curMetaState == 2) {
+							// Desire Z, <>| if FN pressed or locked
+							if(key == 0xc4) //Ä
+								key = 0x3c; //<
+							else if(key == 0xd6) //Ö
+								key = 0x3e; //>
+							else if(key == 0xc5) //Å
+								key = 0x7c; //|
+						}
 					}
 
+					// TODO write encoding routine that doesn't allocate each time
 					bridge.transport.write(new String(Character.toChars(key)).getBytes(encoding));
 				}
 
@@ -246,7 +277,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					event.getRepeatCount() == 0) {
 
 				// Fix for Desire Z TAB key, keyCode == 20
-				if(prefs.getBoolean("htcDesireZ", false) && keyCode == 20) {
+				// NB: keyCode of DPAD down arrow is also 20, so only differense is event.getFlags() == 2 (dpad down flag is 0)
+				if(!prefs.getString("htcDesireZ", "false").equals("false") && keyCode == 20 && event.getFlags() == 2) {
 					bridge.transport.write(0x09);
 					return true;
 				}
@@ -318,8 +350,16 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				break;
 
 			case KeyEvent.KEYCODE_DEL:
-				((vt320) buffer).keyPressed(vt320.KEY_BACK_SPACE, ' ',
-						getStateForBuffer());
+				//Delete key and shift/caps+backspace fix for Desire Z
+				if(!prefs.getString("htcDesireZ", "false").equals("false")) {
+					if(metaState == 4 || metaState == 8) {
+						((vt320) buffer).keyPressed(vt320.KEY_DELETE, ' ', getStateForBuffer());
+					}else{
+						((vt320) buffer).keyPressed(vt320.KEY_BACK_SPACE, ' ', 0);
+					}
+				}else {
+					((vt320) buffer).keyPressed(vt320.KEY_BACK_SPACE, ' ', getStateForBuffer());
+				}
 				metaState &= ~META_TRANSIENT;
 				return true;
 			case KeyEvent.KEYCODE_ENTER:

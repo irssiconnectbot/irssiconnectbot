@@ -150,4 +150,14 @@
 		<item>channel_swipe</item>
 		<item>channel_swipe_inverted</item>
 	</string-array>
+	<string-array name="list_desirez_fixes">
+		<item>Disabled</item>
+		<item>All fixes (Æ = Alt, Ø = Ctrl)</item>
+		<item>Only scandinavian keys</item>
+	</string-array>
+	<string-array name="list_desirez_fixes_values">
+		<item>false</item>
+		<item>true</item>
+		<item>only_scandinavian_keys</item>
+	</string-array>
 </resources>
