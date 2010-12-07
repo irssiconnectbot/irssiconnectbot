@@ -32,7 +32,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -52,14 +51,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -84,19 +80,19 @@ public class ConsoleActivity extends Activity {
 
 	protected static final int REQUEST_EDIT = 1;
 
-	private static final int CLICK_TIME = 400;
-	private static final float MAX_CLICK_DISTANCE = 25f;
-	private static final int KEYBOARD_DISPLAY_TIME = 1500;
+	protected static final int CLICK_TIME = 400;
+	protected static final float MAX_CLICK_DISTANCE = 25f;
+	protected static final int KEYBOARD_DISPLAY_TIME = 1500;
 
 	// Direction to shift the ViewFlipper
-	private static final int SHIFT_LEFT = 0;
-	private static final int SHIFT_RIGHT = 1;
+	protected static final int SHIFT_LEFT = 0;
+	protected static final int SHIFT_RIGHT = 1;
 
 	protected ViewFlipper flip = null;
 	protected TerminalManager bound = null;
 	protected LayoutInflater inflater = null;
 
-	private SharedPreferences prefs = null;
+	protected SharedPreferences prefs = null;
 
 	protected Uri requested;
 
@@ -113,19 +109,15 @@ public class ConsoleActivity extends Activity {
 
 	private Animation slide_left_in, slide_left_out, slide_right_in, slide_right_out, fade_stay_hidden, fade_out_delayed;
 
-	private Animation keyboard_fade_in, keyboard_fade_out;
-	private float lastX, lastY;
+	protected Animation keyboard_fade_in, keyboard_fade_out;
 
 	private InputMethodManager inputManager;
 
 	private MenuItem disconnect, copy, paste, portForward, resize, urlscan;
 
 	protected TerminalBridge copySource = null;
-	private int lastTouchRow, lastTouchCol;
 
 	private boolean forcedOrientation;
-
-	private Handler handler = new Handler();
 
 	private ImageView mKeyboardButton;
 
@@ -390,294 +382,10 @@ public class ConsoleActivity extends Activity {
 
 		// detect fling gestures to switch between terminals
 		final GestureDetector detect = new GestureDetector(
-				new GestureDetector.SimpleOnGestureListener() {
-					private float totalY = 0;
-
-					@Override
-					public boolean onFling(MotionEvent e1, MotionEvent e2,
-							float velocityX, float velocityY) {
-
-						final float distx = e2.getRawX() - e1.getRawX();
-						final float disty = e2.getRawY() - e1.getRawY();
-						final int goalwidth = flip.getWidth() / 2;
-
-						// need to slide across half of display to trigger
-						// console change
-						// make sure user kept a steady hand horizontally
-						if (Math.abs(disty) < (flip.getHeight() / 4)) {
-							if (distx > goalwidth) {
-								shiftCurrentTerminal(SHIFT_RIGHT);
-								return true;
-							}
-
-							if (distx < -goalwidth) {
-								shiftCurrentTerminal(SHIFT_LEFT);
-								return true;
-							}
-
-						}
-
-						return false;
-					}
-
-					@Override
-					public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
-						// if copying, then ignore
-						if (copySource != null && copySource.isSelectingForCopy())
-							return false;
-
-						if (e1 == null || e2 == null)
-							return false;
-
-						// if releasing then reset total scroll
-						if (e2.getAction() == MotionEvent.ACTION_UP) {
-							totalY = 0;
-						}
-
-						// activate consider if within x tolerance
-						if (Math.abs(e1.getX() - e2.getX()) < ViewConfiguration.getTouchSlop() * 4) {
-
-							View flip = findCurrentView(R.id.console_flip);
-							if (flip == null) return false;
-							TerminalView terminal = (TerminalView) flip;
-
-							// estimate how many rows we have scrolled through
-							// accumulate distance that doesn't trigger
-							// immediate scroll
-							totalY += distanceY;
-							final int moved = (int) (totalY / terminal.bridge.charHeight);
-
-							// consume as scrollback only if towards right half
-							// of screen
-							if (e2.getX() > flip.getWidth() / 2) {
-								if (moved != 0) {
-									int base = terminal.bridge.buffer.getWindowBase();
-									terminal.bridge.buffer.setWindowBase(base + moved);
-									totalY = 0;
-									return true;
-								}
-							} else {
-								// otherwise consume as pgup/pgdown for every 5
-								// lines
-								if (moved > 5) {
-									((vt320) terminal.bridge.buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ', 0);
-									terminal.bridge.tryKeyVibrate();
-									totalY = 0;
-									return true;
-								} else if (moved < -5) {
-									((vt320) terminal.bridge.buffer).keyPressed(vt320.KEY_PAGE_UP, ' ', 0);
-									terminal.bridge.tryKeyVibrate();
-									totalY = 0;
-									return true;
-								}
-
-							}
-
-						}
-
-						return false;
-					}
-
-					/*
-					 * Enables doubletap = ESC+a
-					 *
-					 * @see
-					 * android.view.GestureDetector.SimpleOnGestureListener#
-					 * onDoubleTap(android.view.MotionEvent)
-					 *
-					 * @return boolean
-					 */
-					@Override
-					public boolean onDoubleTap(MotionEvent e) {
-						View flip = findCurrentView(R.id.console_flip);
-						if (flip == null) return false;
-						TerminalView terminal = (TerminalView) flip;
-
-						((vt320) terminal.bridge.buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
-						((vt320) terminal.bridge.buffer).write('a');
-
-						return true;
-					}
-
-					/*
-					 * Enables longpress and popups menu
-					 *
-					 * @see
-					 * android.view.GestureDetector.SimpleOnGestureListener#
-					 * onLongPress(android.view.MotionEvent)
-					 *
-					 * @return void
-					 */
-					@Override
-					public void onLongPress(MotionEvent e) {
-						if(prefs.getBoolean("longPressMenu", false)) {
-							View flip = findCurrentView(R.id.console_flip);
-							if (flip == null) return;
-							TerminalView terminal = (TerminalView) flip;
-
-							terminal.bridge.tryKeyVibrate();
-
-							final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c", "<", ">", "|", "[", "]", "{", "}", "^" };
-
-							AlertDialog.Builder builder = new AlertDialog.Builder(ConsoleActivity.this);
-							builder.setTitle("Send an action");
-							builder.setItems(items,
-									new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int item) {
-											View flip = findCurrentView(R.id.console_flip);
-											if (flip == null) return;
-											TerminalView terminal = (TerminalView) flip;
-
-											if (item == 0) {
-												((vt320) terminal.bridge.buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 1) {
-												((vt320) terminal.bridge.buffer).write(0x09);
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 2) {
-												((vt320) terminal.bridge.buffer).write(0x01);
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 3) {
-												((vt320) terminal.bridge.buffer).write(0x01);
-												((vt320) terminal.bridge.buffer).write('d');
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 4) {
-												((vt320) terminal.bridge.buffer).write(0x04);
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 5) {
-												((vt320) terminal.bridge.buffer).write(0x03);
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 6) {
-												((vt320) terminal.bridge.buffer).write(0x3C);
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 7) {
-												((vt320) terminal.bridge.buffer).write(0x3E);
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 8) {
-												((vt320) terminal.bridge.buffer).write('|');
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 9) {
-												((vt320) terminal.bridge.buffer).write('[');
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 10) {
-												((vt320) terminal.bridge.buffer).write(']');
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 11) {
-												((vt320) terminal.bridge.buffer).write('{');
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 12) {
-												((vt320) terminal.bridge.buffer).write('}');
-												terminal.bridge.tryKeyVibrate();
-											} else if (item == 13) {
-												((vt320) terminal.bridge.buffer).write('^');
-												terminal.bridge.tryKeyVibrate();
-											}
-										}
-									});
-							AlertDialog alert = builder.create();
-
-							builder.show();
-						}
-					}
-				});
+				new ICBSimpleOnGestureListener(this));
 
 		flip.setLongClickable(true);
-		flip.setOnTouchListener(new OnTouchListener() {
-
-			public boolean onTouch(View v, MotionEvent event) {
-
-				// when copying, highlight the area
-				if (copySource != null && copySource.isSelectingForCopy()) {
-					int row = (int) Math.floor(event.getY() / copySource.charHeight);
-					int col = (int) Math.floor(event.getX() / copySource.charWidth);
-
-					SelectionArea area = copySource.getSelectionArea();
-
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						// recording starting area
-						if (area.isSelectingOrigin()) {
-							area.setRow(row);
-							area.setColumn(col);
-							lastTouchRow = row;
-							lastTouchCol = col;
-							copySource.redraw();
-						}
-						return true;
-					case MotionEvent.ACTION_MOVE:
-						/*
-						 * ignore when user hasn't moved since last time so we
-						 * can fine-tune with directional pad
-						 */
-						if (row == lastTouchRow && col == lastTouchCol)
-							return true;
-
-						// if the user moves, start the selection for other
-						// corner
-						area.finishSelectingOrigin();
-
-						// update selected area
-						area.setRow(row);
-						area.setColumn(col);
-						lastTouchRow = row;
-						lastTouchCol = col;
-						copySource.redraw();
-						return true;
-					case MotionEvent.ACTION_UP:
-						/*
-						 * If they didn't move their finger, maybe they meant to
-						 * select the rest of the text with the directional pad.
-						 */
-						if (area.getLeft() == area.getRight() && area.getTop() == area.getBottom()) {
-							return true;
-						}
-
-						// copy selected area to clipboard
-						String copiedText = area.copyFrom(copySource.buffer);
-
-						clipboard.setText(copiedText);
-						Toast.makeText(ConsoleActivity.this, getString(R.string.console_copy_done, copiedText.length()), Toast.LENGTH_LONG).show();
-						// fall through to clear state
-
-					case MotionEvent.ACTION_CANCEL:
-						// make sure we clear any highlighted area
-						area.reset();
-						copySource.setSelectingForCopy(false);
-						copySource.redraw();
-						return true;
-					}
-				}
-
-				Configuration config = getResources().getConfiguration();
-
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					lastX = event.getX();
-					lastY = event.getY();
-				} else if (event.getAction() == MotionEvent.ACTION_UP
-						&& keyboardGroup.getVisibility() == View.GONE
-						&& event.getEventTime() - event.getDownTime() < CLICK_TIME
-						&& Math.abs(event.getX() - lastX) < MAX_CLICK_DISTANCE
-						&& Math.abs(event.getY() - lastY) < MAX_CLICK_DISTANCE) {
-					keyboardGroup.startAnimation(keyboard_fade_in);
-					keyboardGroup.setVisibility(View.VISIBLE);
-
-					handler.postDelayed(new Runnable() {
-						public void run() {
-							if (keyboardGroup.getVisibility() == View.GONE)
-								return;
-
-							keyboardGroup.startAnimation(keyboard_fade_out);
-							keyboardGroup.setVisibility(View.GONE);
-						}
-					}, KEYBOARD_DISPLAY_TIME);
-				}
-
-				// pass any touch events back to detector
-				return detect.onTouchEvent(event);
-			}
-
-		});
+		flip.setOnTouchListener(new ICBOnTouchListener(this, keyboardGroup, detect));
 
 	}
 
@@ -1238,4 +946,5 @@ public class ConsoleActivity extends Activity {
 			updateEmptyVisible();
 		}
 	}
+
 }

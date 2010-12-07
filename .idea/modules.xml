@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Connectbot.iml" filepath="$PROJECT_DIR$/Connectbot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/Tests.iml" filepath="$PROJECT_DIR$/tests/Tests.iml" />
     </modules>
   </component>
 </project>
