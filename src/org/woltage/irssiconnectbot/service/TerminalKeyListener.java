@@ -106,7 +106,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		try {
 			final boolean hardKeyboardHidden = manager.hardKeyboardHidden;
-
 			// Ignore all key-up events except for the special keys
 			if (event.getAction() == KeyEvent.ACTION_UP) {
 				// There's nothing here for virtual keyboard users.
@@ -215,7 +214,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				} else {
 
 					// HTC Desire Z fixes
-					if(!prefs.getString("htcDesireZ", "false").equals("false")) {
+					if(!prefs.getString("htcDesireZfix", "false").equals("false")) {
 						/*
 						 * curMetaState == 0 normal mode
 						 * curMetaState == 1 if shift key is pressed or locked
@@ -231,7 +230,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 							else if(key == 0xc5) //Å
 								key = 0xe5; //å
 							else if(key == 0xd8) { //Ø
-								if(prefs.getString("htcDesireZ", "false").equals("true")){ // Bind's Ø to CTRL
+								if(prefs.getString("htcDesireZfix", "false").equals("true")){ // Bind's Ø to CTRL
 									metaPress(META_CTRL_ON);
 									bridge.redraw();
 									return true;
@@ -239,7 +238,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 									key = 0xf8; //ø
 								}
 							} else if(key == 0xc6) { //Æ
-								if(prefs.getString("htcDesireZ", "false").equals("true")){ // Bind's Æ to ALT
+								if(prefs.getString("htcDesireZfix", "false").equals("true")){ // Bind's Æ to ALT
 									sendEscape();
 									bridge.redraw();
 									return true;
@@ -278,7 +277,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
 				// Fix for Desire Z TAB key, keyCode == 20
 				// NB: keyCode of DPAD down arrow is also 20, so only differense is event.getFlags() == 2 (dpad down flag is 0)
-				if(!prefs.getString("htcDesireZ", "false").equals("false") && keyCode == 20 && event.getFlags() == 2) {
+				if(!prefs.getString("htcDesireZfix", "false").equals("false") && keyCode == 20 && event.getFlags() == 2) {
 					bridge.transport.write(0x09);
 					return true;
 				}
@@ -351,7 +350,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
 			case KeyEvent.KEYCODE_DEL:
 				//Delete key and shift/caps+backspace fix for Desire Z
-				if(!prefs.getString("htcDesireZ", "false").equals("false")) {
+				if(!prefs.getString("htcDesireZfix", "false").equals("false")) {
 					if(metaState == 4 || metaState == 8) {
 						((vt320) buffer).keyPressed(vt320.KEY_DELETE, ' ', getStateForBuffer());
 					}else{
