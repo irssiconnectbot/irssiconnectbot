@@ -3,3 +3,4 @@ tools/
 bin
 gen
 launchpad-*.tar.gz
+.settings
