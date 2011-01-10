@@ -156,7 +156,7 @@ class ICBSimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener
 
 			terminal.bridge.tryKeyVibrate();
 
-			final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c", "<", ">", "|", "[", "]", "{", "}", "^" };
+			final CharSequence[] items = { "Alt+?", "TAB", "Ctrl+a", "Ctrl+a+d", "Ctrl+d", "Ctrl+c" };
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(consoleActivity);
 			builder.setTitle("Send an action");
@@ -185,30 +185,6 @@ class ICBSimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener
 								terminal.bridge.tryKeyVibrate();
 							} else if (item == 5) {
 								((vt320) terminal.bridge.buffer).write(0x03);
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 6) {
-								((vt320) terminal.bridge.buffer).write(0x3C);
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 7) {
-								((vt320) terminal.bridge.buffer).write(0x3E);
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 8) {
-								((vt320) terminal.bridge.buffer).write('|');
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 9) {
-								((vt320) terminal.bridge.buffer).write('[');
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 10) {
-								((vt320) terminal.bridge.buffer).write(']');
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 11) {
-								((vt320) terminal.bridge.buffer).write('{');
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 12) {
-								((vt320) terminal.bridge.buffer).write('}');
-								terminal.bridge.tryKeyVibrate();
-							} else if (item == 13) {
-								((vt320) terminal.bridge.buffer).write('^');
 								terminal.bridge.tryKeyVibrate();
 							}
 						}
