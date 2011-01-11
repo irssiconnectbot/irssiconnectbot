@@ -17,14 +17,21 @@
 package org.woltage.irssiconnectbot.service;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.List;
 
+import org.woltage.irssiconnectbot.R;
 import org.woltage.irssiconnectbot.TerminalView;
 import org.woltage.irssiconnectbot.bean.SelectionArea;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
 import android.text.Editable;
@@ -35,7 +42,12 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 import de.mud.terminal.VDUBuffer;
 import de.mud.terminal.vt320;
 
@@ -179,6 +191,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             if ((keyCode == KeyEvent.KEYCODE_SYM || desireZSym) && v != null) {
             	showCharPickerDialog(v);
             	return true;
+    		}else if(keyCode == KeyEvent.KEYCODE_SEARCH) {
+    			urlScan(v);
     		}
 
 			// otherwise pass through to existing session
@@ -609,5 +623,54 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 		};
 		cpd.show();
 		return true;
+	}
+
+	public void urlScan(View v) {
+		//final TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
+
+		List<String> urls = bridge.scanForURLs();
+
+		Dialog urlDialog = new Dialog(v.getContext());
+		urlDialog.setTitle(R.string.console_menu_urlscan);
+
+		ListView urlListView = new ListView(v.getContext());
+		URLItemListener urlListener = new URLItemListener(v.getContext());
+		urlListView.setOnItemClickListener(urlListener);
+
+		urlListView.setAdapter(new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_list_item_1, urls));
+		urlDialog.setContentView(urlListView);
+		urlDialog.show();
+	}
+
+	private class URLItemListener implements OnItemClickListener {
+		private WeakReference<Context> contextRef;
+
+		URLItemListener(Context context) {
+			this.contextRef = new WeakReference<Context>(context);
+		}
+
+		public void onItemClick(AdapterView<?> arg0, View view, int position,
+				long id) {
+			Context context = contextRef.get();
+
+			if (context == null)
+				return;
+
+			try {
+				TextView urlView = (TextView) view;
+
+				String url = urlView.getText().toString();
+				if (url.indexOf("://") < 0)
+					url = "http://" + url;
+
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				context.startActivity(intent);
+			} catch (Exception e) {
+				Log.e(TAG, "couldn't open URL", e);
+				// We should probably tell the user that we couldn't find a
+				// handler...
+			}
+		}
+
 	}
 }
