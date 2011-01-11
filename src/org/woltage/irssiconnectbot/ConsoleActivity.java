@@ -473,6 +473,8 @@ public class ConsoleActivity extends Activity {
 				SelectionArea area = copySource.getSelectionArea();
 				area.reset();
 				area.setBounds(copySource.buffer.getColumns(), copySource.buffer.getRows());
+				area.setRow(copySource.buffer.getCursorRow());
+				area.setColumn(copySource.buffer.getCursorColumn());
 
 				copySource.setSelectingForCopy(true);
 

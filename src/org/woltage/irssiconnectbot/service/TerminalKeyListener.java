@@ -88,7 +88,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 	private int metaState = 0;
 
 	private ClipboardManager clipboard = null;
-	private boolean selectingForCopy = false;
 	private final SelectionArea selectionArea;
 
 	private String encoding;
@@ -104,7 +103,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 		this.buffer = buffer;
 		this.encoding = encoding;
 
-		selectionArea = new SelectionArea();
+		selectionArea = bridge.getSelectionArea();
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(manager);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -119,7 +118,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
         new SparseArray<String>();
 		static {
 			PICKER_SETS.put(KeyCharacterMap.PICKER_DIALOG_INPUT,
-					"!@#$%&*?/:_\"'()-+;,.€¥£~=\\^[]¡¿{}<>|Þ§©®±÷ÖöÄäÅåØøÆæ");
+					"!@#$%&*?/:_\"'()-+;,.€¥£~=\\^[]¡¿{}<>|Þþ§©®±÷ÖöÄäÅåØøÆæÜüẞß¶µ");
 		};
 
 	/**
@@ -400,7 +399,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_LEFT:
-				if (selectingForCopy) {
+				if (bridge.isSelectingForCopy()) {
 					selectionArea.decrementColumn();
 					bridge.redraw();
 				} else {
@@ -412,7 +411,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_UP:
-				if (selectingForCopy) {
+				if (bridge.isSelectingForCopy()) {
 					selectionArea.decrementRow();
 					bridge.redraw();
 				} else {
@@ -424,7 +423,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_DOWN:
-				if (selectingForCopy) {
+				if (bridge.isSelectingForCopy()) {
 					selectionArea.incrementRow();
 					bridge.redraw();
 				} else {
@@ -436,7 +435,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_RIGHT:
-				if (selectingForCopy) {
+				if (bridge.isSelectingForCopy()) {
 					selectionArea.incrementColumn();
 					bridge.redraw();
 				} else {
@@ -448,7 +447,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_CENTER:
-				if (selectingForCopy) {
+				if (bridge.isSelectingForCopy()) {
 					if (selectionArea.isSelectingOrigin())
 						selectionArea.finishSelectingOrigin();
 					else {
@@ -457,12 +456,10 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 							String copiedText = selectionArea.copyFrom(buffer);
 
 							clipboard.setText(copiedText);
-							// XXX STOPSHIP
-//							manager.notifyUser(manager.getString(
-//									R.string.console_copy_done,
-//									copiedText.length()));
-
-							selectingForCopy = false;
+							//Nofify user
+							((TerminalView) v).notifyUser(manager.res.getString(
+									R.string.console_copy_done,copiedText.length() ) );
+							bridge.setSelectingForCopy(false);
 							selectionArea.reset();
 						}
 					}
