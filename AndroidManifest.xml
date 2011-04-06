@@ -68,9 +68,5 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
-<<<<<<< HEAD
-=======
-
->>>>>>> kruton/master
 	<supports-screens />
 </manifest>
