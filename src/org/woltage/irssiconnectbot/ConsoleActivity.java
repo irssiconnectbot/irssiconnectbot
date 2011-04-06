@@ -672,8 +672,10 @@ public class ConsoleActivity extends Activity {
 				try {
 					Log.d(TAG, String.format("We couldnt find an existing bridge with URI=%s (nickname=%s), so creating one now", requested.toString(), requested.getFragment()));
 					requestedBridge = bound.openConnection(requested);
-				} catch (Exception e) {
-					Log.e(TAG, "Problem while trying to create new requested bridge from URI",e);
+				} catch(Exception e) {
+					Log.e(TAG, "Problem while trying to create new requested bridge from URI", e);
+					// TODO: We should display an error dialog here.
+					return;
 				}
 
 				requestedIndex = addNewTerminalView(requestedBridge);

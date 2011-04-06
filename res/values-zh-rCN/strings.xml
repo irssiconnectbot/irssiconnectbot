@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
   <string name="app_desc">简单,强大,开源的ssh客户端</string>
+  <string name="service_desc">设置SSH连接并且装载公钥</string>
   <string name="title_hosts_list">主机</string>
   <string name="title_pubkey_list">公钥</string>
   <string name="title_port_forwards_list">端口重定向</string>
@@ -166,7 +167,11 @@
   <string name="list_rotation_port">强制竖屏显示</string>
   <string name="list_rotation_auto">自动</string>
   <string name="list_camera_ctrlaspace">Ctrl+A 然后 Space</string>
+  <string name="list_camera_ctrla">Ctrl+A</string>
+  <string name="list_camera_esc">Esc 键</string>
+  <string name="list_camera_esc_a">Esc+A</string>
   <string name="list_camera_none">无</string>
+  <string name="list_delkey_backspace">退格键</string>
   <string name="list_delkey_del">删除</string>
   <string name="delete_message">确定要删除\'%1$s\'吗？</string>
   <string name="delete_pos">是，删除</string>
