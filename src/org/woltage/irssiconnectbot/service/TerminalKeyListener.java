@@ -118,10 +118,10 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
     private static SparseArray<String> PICKER_SETS =
         new SparseArray<String>();
-		static {
-			PICKER_SETS.put(KeyCharacterMap.PICKER_DIALOG_INPUT,
-					"!@#$%&*?/:_\"'()-+;,.€¥£~=\\^[]¡¿{}<>|Þþ§©®±÷ÖöÄäÅåØøÆæÜüẞß¶µ");
-		};
+	static {
+		PICKER_SETS.put(KeyCharacterMap.PICKER_DIALOG_INPUT,
+				"!@#$%&*?/:_\"'()-+;,.€¥£~=\\^[]¡¿{}<>|Þþ§©®±÷ÖöÄäÅåØøÆæÜüẞß¶µ");
+	};
 
 	/**
 	 * Handle onKey() events coming down from a {@link TerminalView} above us.
@@ -213,13 +213,15 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				mDeadKey = 0;
 			}
 
-			final boolean printing = (key != 0);
+			final boolean printing = (key != 0 && keyCode != KeyEvent.KEYCODE_ENTER);
 
 			//Show up the CharacterPickerDialog when the SYM key is pressed
-			boolean desireZSym = (!prefs.getString("htcDesireZfix", "false").equals("false")
-									&& keyCode == 84 && (metaState == 4 || metaState == 8));
-            if ((keyCode == KeyEvent.KEYCODE_SYM || desireZSym) && v != null) {
+			if( (keyCode == KeyEvent.KEYCODE_SYM || key == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
             	showCharPickerDialog(v);
+            	if(metaState == 4) { // reset fn-key state
+            		metaState = 0;
+            		bridge.redraw();
+            	}
             	return true;
     		}else if(keyCode == KeyEvent.KEYCODE_SEARCH) {
     			urlScan(v);
@@ -277,7 +279,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 						 * curMetaState == 0 normal mode
 						 * curMetaState == 1 if shift key is pressed or locked
 						 * curMetaState == 2 if FN key is pressed or locked
-						 * curMetaState == 3 if FN OR shift key is pressed or locked
+						 * curMetaState == 3 if FN AND shift key is pressed or locked
 						 */
 						if(curMetaState == 0) {
 							// Desire Z, lowercase if curMetaState == 0! Problem with HW keymapping?
@@ -320,12 +322,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					bridge.transport.write(new String(Character.toChars(key)).getBytes(encoding));
 				}
 
-				return true;
-			}
-
-			if (keyCode == KeyEvent.KEYCODE_UNKNOWN && event.getAction() == KeyEvent.ACTION_MULTIPLE) {
-				byte[] input = event.getCharacters().getBytes(encoding);
-				bridge.transport.write(input);
 				return true;
 			}
 
@@ -386,8 +382,10 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
 			// look for special chars
 			switch(keyCode) {
+			case KeyEvent.KEYCODE_TAB: // Support for Hard Keyboard TAB
+				bridge.transport.write(0x09);
+				return true;
 			case KeyEvent.KEYCODE_CAMERA:
-
 				// check to see which shortcut the camera button triggers
 				String camera = manager.prefs.getString(
 						PreferenceConstants.CAMERA,
