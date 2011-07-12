@@ -1,0 +1,86 @@
+*Irssi ConnectBot* is a modified version of the popular [http://code.google.com/p/connectbot/ ConnectBot] SSH client for Android.
+
+*Irssi ConnectBot* has features which helps users to use IRC-clients and other utilites through SSH.
+
+*Twitter*: http://www.twitter.com/irssiconnectbot
+
+Features: <br><br>
+- Doubletap sends meta+a<br>
+- Left/Right swipe sends meta+left/right for fast channel changes<br>
+- Long press opens popup menu with commands (ctrl+a, ctrl+a+d etc.)<br>
+- Sym-key support for devices with SYM-key
+- Multiple fixes for Nordic HTC Desire Z (TAB, fn+SYM, scandic characters upper and lowercase, special bindings for Ctrl&alt)<br>
+- onscreen virtual SYM-key<br>
+- Scandic and german characters added to SYM-menu <br>
+
+
+= Android Market =
+Download from Android Market:
+
+[http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=market://details?id=org.woltage.irssiconnectbot?jotain.png]
+
+* Market comments and answers: http://bit.ly/fLFeb9 *
+= Github =
+
+Get source from: http://www.github.com/irssiconnectbot
+
+
+= Developers =
+
+The *Irssi ConnectBot* fork of ConnectBot is mainly developed  by *Iiro Uusitalo (woltage)* and *Ville Kerminen (Villae)* 
+
+The *Irssi ConnectBot* engine, codebase rewrite and plugin engine is developed by *Timo Reunanen (Parker Kane)* and *Iiro Uusitalo (woltage)* which will be released in the Milestone 2.0 build, this build will no longer be based on the ConnectBot source eventhough the name will stay the same.
+
+All developers can be found in *IRCnet* on the channel *#irssiconnectbot*
+
+= Development versions =
+
+If you want to run the development versions, you can follow these quick steps to getting Irssi connectbot working on your new Android phone:
+
+1. Enable outside-of-Market applications. Go into Settings, Applications, and enable the "Unknown sources" option.
+
+2. Uninstall any old versions. Go into Settings, Applications, Manage Applications. Look through the list for Irssi ConnectBot and uninstall if it's there.
+
+3. Install the new version. Open your browser on your phone and come to this page and download one of the APKs shown on the right. Tap on the download when it's done and follow the instructions to install the app.
+
+==If you run into application problems==
+
+Please, please send us relevant log dumps when you have a crash. 
+
+1. Download and install Android Log collector: http://code.google.com/p/android-log-collector/downloads/detail?name=android-log-collector-1.1.0.apk
+
+QR:<br>
+[http://chart.apis.google.com/chart?chs=150x150&cht=qr&chl=http://android-log-collector.googlecode.com/files/android-log-collector-1.1.0.apk&chld=L|1&choe=UTF-8&log_collector.png]
+
+2. Run in it after the crash
+
+3. Send the logs to us
+
+
+
+Compiling
+---------
+
+local.properties:
+
+ To compile ConnectBot using Ant, you must specify where your Android SDK is via the local.properties file. Insert a line similar to the following with the full path to your SDK:
+
+ sdk.dir=/usr/local/android
+
+ Also indicate the key store and key (by alias) with a full path, signing apk is essentially mandatory for the emulator and actual phones. Example:
+
+ key.store=/home/someuser/.android/mykeystore.keystore
+ key.alias=mykeys
+
+ If your environment runs on a pre-release OpenJDK, also set these parameters, otherwise the ant javac task as defined in the Android SDK (target="1.5") and/or the Proguard target will fail:
+ ant.build.javac.source=1.5
+ ant.build.javac.target=1.5
+
+ProGuard Support
+----------------
+
+Download the ProGuard distribution from its website at http://proguard.sourceforge.net/ and place the proguard.jar into the "tools" subdirectory in the ConnectBot root directory.
+
+When running ant to build ConnectBot and engage ProGuard, use:
+
+ant proguard release
