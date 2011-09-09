@@ -89,6 +89,10 @@ public class ConsoleActivity extends Activity {
 
 	protected SharedPreferences prefs = null;
 
+	// determines whether or not menuitem accelerators are bound
+	// otherwise they collide with an external keyboard's CTRL-char
+	private boolean hardKeyboard = false;
+
 	protected Uri requested;
 
 	protected ClipboardManager clipboard;
@@ -243,9 +247,20 @@ public class ConsoleActivity extends Activity {
 		booleanPromptGroup.setVisibility(View.GONE);
 	}
 
+	// more like configureLaxMode -- enable network IO on UI thread
+	private void configureStrictMode() {
+		try {
+			Class.forName("android.os.StrictMode");
+			StrictModeSetup.run();
+		} catch (ClassNotFoundException e) {
+		}
+	}
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		configureStrictMode();
+		hardKeyboard = getResources().getConfiguration().keyboard ==
+				Configuration.KEYBOARD_QWERTY;
 
 		this.setContentView(R.layout.act_console);
 
@@ -468,7 +483,8 @@ public class ConsoleActivity extends Activity {
 		menu.setQwertyMode(true);
 
 		disconnect = menu.add(R.string.list_host_disconnect);
-		disconnect.setAlphabeticShortcut('w');
+		if (hardKeyboard)
+			disconnect.setAlphabeticShortcut('w');
 		if (!sessionOpen && disconnected)
 			disconnect.setTitle(R.string.console_menu_close);
 		disconnect.setEnabled(activeTerminal);
@@ -485,7 +501,8 @@ public class ConsoleActivity extends Activity {
 		});
 
 		copy = menu.add(R.string.console_menu_copy);
-		copy.setAlphabeticShortcut('c');
+		if (hardKeyboard)
+			copy.setAlphabeticShortcut('c');
 		copy.setIcon(android.R.drawable.ic_menu_set_as);
 		copy.setEnabled(activeTerminal);
 		copy.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -511,7 +528,8 @@ public class ConsoleActivity extends Activity {
 		});
 
 		paste = menu.add(R.string.console_menu_paste);
-		paste.setAlphabeticShortcut('v');
+		if (hardKeyboard)
+			paste.setAlphabeticShortcut('v');
 		paste.setIcon(android.R.drawable.ic_menu_edit);
 		paste.setEnabled(clipboard.hasText() && sessionOpen);
 		paste.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -530,7 +548,8 @@ public class ConsoleActivity extends Activity {
 		});
 
 		portForward = menu.add(R.string.console_menu_portforwards);
-		portForward.setAlphabeticShortcut('f');
+		if (hardKeyboard)
+			portForward.setAlphabeticShortcut('f');
 		portForward.setIcon(android.R.drawable.ic_menu_manage);
 		portForward.setEnabled(sessionOpen && canForwardPorts);
 		portForward.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -546,7 +565,8 @@ public class ConsoleActivity extends Activity {
 		});
 
 		urlscan = menu.add(R.string.console_menu_urlscan);
-		urlscan.setAlphabeticShortcut('u');
+		if (hardKeyboard)
+			urlscan.setAlphabeticShortcut('u');
 		urlscan.setIcon(android.R.drawable.ic_menu_search);
 		urlscan.setEnabled(activeTerminal);
 		urlscan.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -561,7 +581,8 @@ public class ConsoleActivity extends Activity {
 		});
 
 		resize = menu.add(R.string.console_menu_resize);
-		resize.setAlphabeticShortcut('s');
+		if (hardKeyboard)
+			resize.setAlphabeticShortcut('s');
 		resize.setIcon(android.R.drawable.ic_menu_crop);
 		resize.setEnabled(sessionOpen);
 		resize.setOnMenuItemClickListener(new OnMenuItemClickListener() {

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="org.connectbot"
 	android:versionName="1.7.1-irssi"
-	android:installLocation="auto" package="org.woltage.irssiconnectbot" android:versionCode="386">
+	android:versionCode="387"
+	android:installLocation="auto">
 
-	<uses-sdk android:targetSdkVersion="9" android:minSdkVersion="3" />
+	<uses-sdk android:targetSdkVersion="11" android:minSdkVersion="3" />
 
 	<application
 		android:icon="@drawable/icon"
@@ -60,6 +62,9 @@
 				<!-- format:  local://  -->
 			</intent-filter>
 		</activity>
+
+		<meta-data android:name="com.google.android.backup.api_key"
+			android:value="AEdPqrEAAAAIKAr77lssJ1BDO2gPUVlnYipcfQIpp0vj0fjUYw" />
 
 	</application>
 
