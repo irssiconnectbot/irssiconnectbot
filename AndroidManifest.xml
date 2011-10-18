@@ -1,77 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.connectbot"
-	android:versionName="1.7.1-irssi"
-	android:versionCode="387"
-	android:installLocation="auto">
+          android:versionName="1.7.1-irssi"
+          android:versionCode="387"
+          android:installLocation="auto"
+          package="org.woltage.irssiconnectbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.android.com/apk/res/android ">
 
-	<uses-sdk android:targetSdkVersion="11" android:minSdkVersion="3" />
+    <uses-sdk android:targetSdkVersion="11" android:minSdkVersion="3"/>
 
-	<application
-		android:icon="@drawable/icon"
-		android:label="@string/app_name"
-		android:description="@string/app_desc"
-		android:allowBackup="true"
-		android:backupAgent=".service.BackupAgent"
-		android:killAfterRestore="true">
+    <application
+            android:icon="@drawable/icon"
+            android:label="@string/app_name"
+            android:description="@string/app_desc"
+            android:allowBackup="true"
+            android:backupAgent=".service.BackupAgent"
+            android:killAfterRestore="true">
 
-		<activity android:name=".HostListActivity" >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.CREATE_SHORTCUT" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.PICK" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<data android:scheme="ssh" />
-				<data android:scheme="telnet" />
-				<data android:scheme="local" />
-			</intent-filter>
-		</activity>
+        <activity android:name=".HostListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PICK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="ssh"/>
+                <data android:scheme="telnet"/>
+                <data android:scheme="local"/>
+            </intent-filter>
+        </activity>
 
-		<activity android:name=".PubkeyListActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".GeneratePubkeyActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".HostEditorActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".PortForwardListActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".SettingsActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".WizardActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".HelpActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".HelpTopicActivity" android:configChanges="keyboardHidden|orientation" />
-		<activity android:name=".ColorsActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".PubkeyListActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".GeneratePubkeyActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".HostEditorActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".PortForwardListActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".SettingsActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".WizardActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".HelpActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".HelpTopicActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".ColorsActivity" android:configChanges="keyboardHidden|orientation"/>
 
-		<service android:name="org.woltage.irssiconnectbot.service.TerminalManager"
-			android:configChanges="keyboardHidden|orientation"
-			android:description="@string/service_desc" />
+        <service android:name="org.woltage.irssiconnectbot.service.TerminalManager"
+                 android:configChanges="keyboardHidden|orientation"
+                 android:description="@string/service_desc"/>
 
-		<activity android:name=".ConsoleActivity" android:configChanges="keyboardHidden|orientation"
-			android:theme="@style/NoTitle" android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
-			android:launchMode="singleTop">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="ssh" />
-				<data android:scheme="telnet" />
-				<data android:scheme="local" />
-				<!-- format:  ssh://user@host:port/#nickname  -->
-				<!-- format:  telnet://host:port/#nickname  -->
-				<!-- format:  local://  -->
-			</intent-filter>
-		</activity>
+        <activity android:name=".ConsoleActivity" android:configChanges="keyboardHidden|orientation"
+                  android:theme="@style/NoTitle" android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+                  android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="ssh"/>
+                <data android:scheme="telnet"/>
+                <data android:scheme="local"/>
+                <!-- format:  ssh://user@host:port/#nickname  -->
+                <!-- format:  telnet://host:port/#nickname  -->
+                <!-- format:  local://  -->
+            </intent-filter>
+        </activity>
 
-		<meta-data android:name="com.google.android.backup.api_key"
-			android:value="AEdPqrEAAAAIKAr77lssJ1BDO2gPUVlnYipcfQIpp0vj0fjUYw" />
+        <meta-data android:name="com.google.android.backup.api_key"
+                   android:value="AEdPqrEAAAAIKAr77lssJ1BDO2gPUVlnYipcfQIpp0vj0fjUYw"/>
 
-	</application>
+    </application>
 
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<supports-screens />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <supports-screens/>
 </manifest>

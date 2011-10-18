@@ -14,20 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.connectbot.mock;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-/**
- * @author Kenny Root
- *
- */
-public class NullOutputStream extends OutputStream {
-	@Override
-	public void write(int arg0) throws IOException {
-		// do nothing
+package org.woltage.irssiconnectbot;
+import android.os.StrictMode;
+public class StrictModeSetup {
+	public static void run() {
+		StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX);
 	}
-
 }
