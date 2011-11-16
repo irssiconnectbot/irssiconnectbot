@@ -283,39 +283,38 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 						 * curMetaState == 3 if FN AND shift key is pressed or locked
 						 */
 						if(curMetaState == 0) {
-							// Desire Z, lowercase if curMetaState == 0! Problem with HW keymapping?
-							if(key == 0xc4) //Ä
-								key = 0xe4; //ä
-							else if(key == 0xd6) //Ö
-								key = 0xf6; //ö
-							else if(key == 0xc5) //Å
-								key = 0xe5; //å
-							else if(key == 0xd8) { //Ø
-								if(prefs.getString("htcDesireZfix", "false").equals("true")){ // Bind's Ø to CTRL
+							// Desire Z "All fixes (Æ = Alt, Ø = Ctrl)"
+							if(prefs.getString("htcDesireZfix", "false").equals("true")){ // Bind's Ø and ø to CTRL
+								if(key == 0xd8 || key == 0xf8) {
 									metaPress(META_CTRL_ON);
 									bridge.redraw();
 									return true;
-								}else{
-									key = 0xf8; //ø
-								}
-							} else if(key == 0xc6) { //Æ
-								if(prefs.getString("htcDesireZfix", "false").equals("true")){ // Bind's Æ to ALT
+								} else if(key == 0xc6 || key == 0xe6) { // Bind's Æ and æ to ALT
 									sendEscape();
 									bridge.redraw();
 									return true;
-								}else{
-									key = 0xe6; //æ
 								}
 							}
+							// Desire Z, lowercase if curMetaState == 0! Problem with HW keymapping?
+							if(key == 0xC4) //Ä
+								key = 0xE4; //ä
+							else if(key == 0xD6) //Ö
+								key = 0xF6; //ö
+							else if(key == 0xC5) //Å
+								key = 0xE5; //å
+							else if(key == 0xD8) //Ø
+								key = 0xF8; //ø
+							else if(key == 0xC6) //Æ
+								key = 0xE6; //æ
 						}
 						else if(curMetaState == 2) {
 							// Desire Z, <>| if FN pressed or locked
-							if(key == 0xc4) //Ä
-								key = 0x3c; //<
-							else if(key == 0xd6) //Ö
-								key = 0x3e; //>
-							else if(key == 0xc5) //Å
-								key = 0x7c; //|
+							if(key == 0xC4 || key == 0xE4) //Ä or ä
+								key = 0x3C; //<
+							else if(key == 0xD6 || key == 0xF6) //Ö or ö
+								key = 0x3E; //>
+							else if(key == 0xC5 || key == 0XE5) //Å or å
+								key = 0x7C; //|
 						}
 					}
 
