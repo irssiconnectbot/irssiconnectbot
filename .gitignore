@@ -5,3 +5,5 @@ gen
 launchpad-*.tar.gz
 local.properties
 *~
+*.iml
+.idea
