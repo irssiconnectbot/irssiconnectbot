@@ -24,6 +24,7 @@ import org.woltage.irssiconnectbot.service.TerminalKeyListener;
 import org.woltage.irssiconnectbot.service.TerminalManager;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 
+import com.bugsense.trace.BugSenseHandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -263,7 +264,7 @@ public class ConsoleActivity extends Activity {
 				Configuration.KEYBOARD_QWERTY;
 
 		this.setContentView(R.layout.act_console);
-
+        BugSenseHandler.setup(this, "f18d0d05");
 		ExceptionHandler.register(this);
 
 		clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
