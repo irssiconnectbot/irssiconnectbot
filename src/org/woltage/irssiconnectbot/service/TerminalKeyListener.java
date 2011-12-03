@@ -228,7 +228,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			final boolean printing = (key != 0 && keyCode != KeyEvent.KEYCODE_ENTER);
 
 			//Show up the CharacterPickerDialog when the SYM key is pressed
-			if( (keyCode == KeyEvent.KEYCODE_SYM || key == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
+			if( (keyCode == KeyEvent.KEYCODE_SYM || keyCode == KeyEvent.KEYCODE_PICTSYMBOLS ||
+					key == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
             	showCharPickerDialog(v);
             	if(metaState == 4) { // reset fn-key state
             		metaState = 0;
@@ -499,6 +500,9 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_CENTER:
+			case KeyEvent.KEYCODE_SWITCH_CHARSET:
+				if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET && !prefs.getBoolean("xperiaProFix", false))
+					return true;
 				if (bridge.isSelectingForCopy()) {
 					if (selectionArea.isSelectingOrigin())
 						selectionArea.finishSelectingOrigin();
@@ -522,10 +526,27 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					} else
 						metaPress(META_CTRL_ON);
 				}
-
 				bridge.redraw();
-
 				return true;
+
+			case KeyEvent.KEYCODE_S:
+				if(prefs.getBoolean("xperiaProFix", false)) {
+					bridge.transport.write('|');
+					metaState &= ~META_TRANSIENT;
+					bridge.redraw();
+					return true;
+				}
+
+			case KeyEvent.KEYCODE_Z:
+				if(prefs.getBoolean("xperiaProFix", false)) {
+					bridge.transport.write(0x5C);
+					metaState &= ~META_TRANSIENT;
+					bridge.redraw();
+					return true;
+				}
+
+			bridge.redraw();
+			return true;
 			}
 
 		} catch (IOException e) {
