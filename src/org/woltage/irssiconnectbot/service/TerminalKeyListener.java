@@ -721,6 +721,15 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				}
 				dismiss(); //Closes the picker
 			}
+
+			@Override
+			public boolean onKeyDown(int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_SYM || keyCode == KeyEvent.KEYCODE_PICTSYMBOLS) {
+					dismiss();
+					return true;
+				}
+				return super.onKeyDown(keyCode, event);
+			}
 		};
 		cpd.show();
 		return true;
