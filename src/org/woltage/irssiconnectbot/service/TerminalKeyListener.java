@@ -694,22 +694,33 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 		CharSequence str = "";
         Editable content = Editable.Factory.getInstance().newEditable(str);
 
-    	String set = PICKER_SETS.get(KeyCharacterMap.PICKER_DIALOG_INPUT);
+    	final String set = PICKER_SETS.get(KeyCharacterMap.PICKER_DIALOG_INPUT);
 		if (set == null) return false;
 
 		CharacterPickerDialog cpd = new CharacterPickerDialog(v.getContext(), v, content, set, true) {
-		@Override
-		public void onClick(View v) {
-			if (v instanceof Button) {
-				CharSequence result = ((Button) v).getText();
+			private void writeCharAndClose(CharSequence result) {
 				try {
 					bridge.transport.write(result.toString().getBytes());
 				} catch (IOException e) {
 					Log.e(TAG, "Problem with the CharacterPickerDialog", e);
 				}
-	        }
-	        dismiss(); //Closes the picker
-		}
+				dismiss();
+			}
+
+			@Override
+			public void onItemClick(AdapterView p, View v, int pos, long id) {
+				String result = String.valueOf(set.charAt(pos));
+				writeCharAndClose(result);
+			}
+
+			@Override
+			public void onClick(View v) {
+				if (v instanceof Button) {
+					CharSequence result = ((Button) v).getText();
+					writeCharAndClose(result);
+				}
+				dismiss(); //Closes the picker
+			}
 		};
 		cpd.show();
 		return true;
