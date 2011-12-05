@@ -456,8 +456,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.decrementColumn();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_LEFT, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320) buffer).keyPressed(vt320.KEY_HOME, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_LEFT, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
@@ -468,8 +473,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.decrementRow();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_UP, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320)buffer).keyPressed(vt320.KEY_PAGE_UP, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_UP, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
@@ -480,8 +490,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.incrementRow();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_DOWN, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320)buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_DOWN, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
@@ -492,8 +507,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.incrementColumn();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_RIGHT, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320) buffer).keyPressed(vt320.KEY_END, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_RIGHT, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
