@@ -264,7 +264,7 @@ public class ConsoleActivity extends Activity {
 				Configuration.KEYBOARD_QWERTY;
 
 		this.setContentView(R.layout.act_console);
-        BugSenseHandler.setup(this, "f18d0d05");
+        	BugSenseHandler.setup(this, "d27a12dc");
 		ExceptionHandler.register(this);
 
 		clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
