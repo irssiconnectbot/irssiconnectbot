@@ -228,7 +228,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			final boolean printing = (key != 0 && keyCode != KeyEvent.KEYCODE_ENTER);
 
 			//Show up the CharacterPickerDialog when the SYM key is pressed
-			if( (keyCode == KeyEvent.KEYCODE_SYM || key == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
+			if( (keyCode == KeyEvent.KEYCODE_SYM || keyCode == KeyEvent.KEYCODE_PICTSYMBOLS ||
+					key == KeyCharacterMap.PICKER_DIALOG_INPUT) && v != null) {
             	showCharPickerDialog(v);
             	if(metaState == 4) { // reset fn-key state
             		metaState = 0;
@@ -455,8 +456,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.decrementColumn();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_LEFT, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320) buffer).keyPressed(vt320.KEY_HOME, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_LEFT, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
@@ -467,8 +473,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.decrementRow();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_UP, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320)buffer).keyPressed(vt320.KEY_PAGE_UP, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_UP, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
@@ -479,8 +490,13 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.incrementRow();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_DOWN, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320)buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_DOWN, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
@@ -491,14 +507,22 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					selectionArea.incrementColumn();
 					bridge.redraw();
 				} else {
-					((vt320) buffer).keyPressed(vt320.KEY_RIGHT, ' ',
-							getStateForBuffer());
+					if ((metaState & META_ALT_MASK) != 0) {
+						((vt320) buffer).keyPressed(vt320.KEY_END, ' ',
+								getStateForBuffer());
+					} else {
+						((vt320) buffer).keyPressed(vt320.KEY_RIGHT, ' ',
+								getStateForBuffer());
+					}
 					metaState &= ~META_TRANSIENT;
 					bridge.tryKeyVibrate();
 				}
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_CENTER:
+			case KeyEvent.KEYCODE_SWITCH_CHARSET:
+				if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET && !prefs.getBoolean("xperiaProFix", false))
+					return true;
 				if (bridge.isSelectingForCopy()) {
 					if (selectionArea.isSelectingOrigin())
 						selectionArea.finishSelectingOrigin();
@@ -522,10 +546,27 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					} else
 						metaPress(META_CTRL_ON);
 				}
-
 				bridge.redraw();
-
 				return true;
+
+			case KeyEvent.KEYCODE_S:
+				if(prefs.getBoolean("xperiaProFix", false)) {
+					bridge.transport.write('|');
+					metaState &= ~META_TRANSIENT;
+					bridge.redraw();
+					return true;
+				}
+
+			case KeyEvent.KEYCODE_Z:
+				if(prefs.getBoolean("xperiaProFix", false)) {
+					bridge.transport.write(0x5C);
+					metaState &= ~META_TRANSIENT;
+					bridge.redraw();
+					return true;
+				}
+
+			bridge.redraw();
+			return true;
 			}
 
 		} catch (IOException e) {
@@ -673,22 +714,42 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 		CharSequence str = "";
         Editable content = Editable.Factory.getInstance().newEditable(str);
 
-    	String set = PICKER_SETS.get(KeyCharacterMap.PICKER_DIALOG_INPUT);
+    	final String set = PICKER_SETS.get(KeyCharacterMap.PICKER_DIALOG_INPUT);
 		if (set == null) return false;
 
 		CharacterPickerDialog cpd = new CharacterPickerDialog(v.getContext(), v, content, set, true) {
-		@Override
-		public void onClick(View v) {
-			if (v instanceof Button) {
-				CharSequence result = ((Button) v).getText();
+			private void writeCharAndClose(CharSequence result) {
 				try {
 					bridge.transport.write(result.toString().getBytes());
 				} catch (IOException e) {
 					Log.e(TAG, "Problem with the CharacterPickerDialog", e);
 				}
-	        }
-	        dismiss(); //Closes the picker
-		}
+				dismiss();
+			}
+
+			@Override
+			public void onItemClick(AdapterView p, View v, int pos, long id) {
+				String result = String.valueOf(set.charAt(pos));
+				writeCharAndClose(result);
+			}
+
+			@Override
+			public void onClick(View v) {
+				if (v instanceof Button) {
+					CharSequence result = ((Button) v).getText();
+					writeCharAndClose(result);
+				}
+				dismiss(); //Closes the picker
+			}
+
+			@Override
+			public boolean onKeyDown(int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_SYM || keyCode == KeyEvent.KEYCODE_PICTSYMBOLS) {
+					dismiss();
+					return true;
+				}
+				return super.onKeyDown(keyCode, event);
+			}
 		};
 		cpd.show();
 		return true;
