@@ -480,9 +480,14 @@
 	<!--  HTC Desire Z  -->
 	<string name="pref_htcdesirez_title">HTC Desire Z fix</string>
 	<string name="pref_htcdesirez_summary">Forces scandinavian chars to lowercase</string>
+
+	<!--  Sony Ericsson Xperia pro and Xperia mini pro -->
+	<string name="pref_xperiapro_title">Sony Ericsson Xperia (mini) pro fix</string>
+	<string name="pref_xperiapro_summary">Hardware keyboard fixes</string>
 	
 	<!--  Force size-->
 	<string name="pref_force_size">Force Size</string>
 	<string name="force_size_width">Width</string>
 	<string name="force_size_height">Height</string>
+		
 </resources>
