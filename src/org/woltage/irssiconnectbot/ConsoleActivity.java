@@ -616,6 +616,7 @@ public class ConsoleActivity extends Activity {
 							}
 							if (width > 0 && height > 0)
 								terminalView.forceSize(width, height);
+								terminalView.bridge.parentChanged(terminalView);
 							else {
 								new AlertDialog.Builder(ConsoleActivity.this)
 									.setMessage("Width and height must be higher than zero.")
