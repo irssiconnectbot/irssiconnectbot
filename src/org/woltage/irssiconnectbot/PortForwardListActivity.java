@@ -372,7 +372,7 @@ public class PortForwardListActivity extends ListActivity {
 		if (hostBridge != null) {
 			this.portForwards = hostBridge.getPortForwards();
 		} else {
-			if (this.hostdb == null) return;
+			if (this.hostdb == null || host == null) return;
 			this.portForwards = this.hostdb.getPortForwardsForHost(host);
 		}
 
