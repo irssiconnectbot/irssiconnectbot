@@ -44,10 +44,12 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.mud.terminal.VDUBuffer;
 import de.mud.terminal.vt320;
 
@@ -406,6 +408,47 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				}
 			}
 
+			//Handle d-pad arrows in copy mode
+			if (bridge.isSelectingForCopy()) {
+				switch(keyCode) {
+				case KeyEvent.KEYCODE_DPAD_LEFT:
+					selectionArea.decrementColumn();
+					bridge.redraw();
+					return true;
+				case KeyEvent.KEYCODE_DPAD_UP:
+					selectionArea.decrementRow();
+					bridge.redraw();
+					return true;
+				case KeyEvent.KEYCODE_DPAD_DOWN:
+					selectionArea.incrementRow();
+					bridge.redraw();
+					return true;
+				case KeyEvent.KEYCODE_DPAD_RIGHT:
+					selectionArea.incrementColumn();
+					bridge.redraw();
+					return true;
+				case KeyEvent.KEYCODE_DPAD_CENTER:
+					if (selectionArea.isSelectingOrigin())
+						selectionArea.finishSelectingOrigin();
+					else {
+						if (clipboard != null) {
+							// copy selected area to clipboard
+							String copiedText = selectionArea.copyFrom(buffer);
+
+							clipboard.setText(copiedText);
+							//Nofify user
+							((TerminalView) v).notifyUser(manager.res.getString(
+									R.string.console_copy_done,copiedText.length() ) );
+							bridge.setSelectingForCopy(false);
+							selectionArea.reset();
+						}
+					}
+					bridge.redraw();
+					return true;
+				}
+			}
+
+
 			// look for special chars
 			switch(keyCode) {
 			case KEYCODE_ESCAPE:
@@ -413,6 +456,12 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 			case KeyEvent.KEYCODE_TAB:
 				bridge.transport.write(0x09);
+				return true;
+			case KeyEvent.KEYCODE_PAGE_DOWN:
+				((vt320)buffer).keyTyped(vt320.KEY_PAGE_DOWN, ' ', getStateForBuffer());
+				return true;
+			case KeyEvent.KEYCODE_PAGE_UP:
+				((vt320)buffer).keyTyped(vt320.KEY_PAGE_UP, ' ', getStateForBuffer());
 				return true;
 			case KeyEvent.KEYCODE_CAMERA:
 				// check to see which shortcut the camera button triggers
@@ -452,100 +501,58 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 
 			case KeyEvent.KEYCODE_DPAD_LEFT:
-				if (bridge.isSelectingForCopy()) {
-					selectionArea.decrementColumn();
-					bridge.redraw();
+				if ((metaState & META_ALT_MASK) != 0) {
+					((vt320) buffer).keyPressed(vt320.KEY_HOME, ' ',
+							getStateForBuffer());
 				} else {
-					if ((metaState & META_ALT_MASK) != 0) {
-						((vt320) buffer).keyPressed(vt320.KEY_HOME, ' ',
-								getStateForBuffer());
-					} else {
-						((vt320) buffer).keyPressed(vt320.KEY_LEFT, ' ',
-								getStateForBuffer());
-					}
-					metaState &= ~META_TRANSIENT;
-					bridge.tryKeyVibrate();
+					((vt320) buffer).keyPressed(vt320.KEY_LEFT, ' ',
+							getStateForBuffer());
 				}
+				metaState &= ~META_TRANSIENT;
+				bridge.tryKeyVibrate();
 				return true;
-
 			case KeyEvent.KEYCODE_DPAD_UP:
-				if (bridge.isSelectingForCopy()) {
-					selectionArea.decrementRow();
-					bridge.redraw();
+				if ((metaState & META_ALT_MASK) != 0) {
+					((vt320)buffer).keyPressed(vt320.KEY_PAGE_UP, ' ',
+							getStateForBuffer());
 				} else {
-					if ((metaState & META_ALT_MASK) != 0) {
-						((vt320)buffer).keyPressed(vt320.KEY_PAGE_UP, ' ',
-								getStateForBuffer());
-					} else {
-						((vt320) buffer).keyPressed(vt320.KEY_UP, ' ',
-								getStateForBuffer());
-					}
-					metaState &= ~META_TRANSIENT;
-					bridge.tryKeyVibrate();
+					((vt320) buffer).keyPressed(vt320.KEY_UP, ' ',
+							getStateForBuffer());
 				}
+				metaState &= ~META_TRANSIENT;
+				bridge.tryKeyVibrate();
 				return true;
-
 			case KeyEvent.KEYCODE_DPAD_DOWN:
-				if (bridge.isSelectingForCopy()) {
-					selectionArea.incrementRow();
-					bridge.redraw();
+				if ((metaState & META_ALT_MASK) != 0) {
+					((vt320)buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ',
+							getStateForBuffer());
 				} else {
-					if ((metaState & META_ALT_MASK) != 0) {
-						((vt320)buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ',
-								getStateForBuffer());
-					} else {
-						((vt320) buffer).keyPressed(vt320.KEY_DOWN, ' ',
-								getStateForBuffer());
-					}
-					metaState &= ~META_TRANSIENT;
-					bridge.tryKeyVibrate();
+					((vt320) buffer).keyPressed(vt320.KEY_DOWN, ' ',
+							getStateForBuffer());
 				}
+				metaState &= ~META_TRANSIENT;
+				bridge.tryKeyVibrate();
 				return true;
-
 			case KeyEvent.KEYCODE_DPAD_RIGHT:
-				if (bridge.isSelectingForCopy()) {
-					selectionArea.incrementColumn();
-					bridge.redraw();
+				if ((metaState & META_ALT_MASK) != 0) {
+					((vt320) buffer).keyPressed(vt320.KEY_END, ' ',
+							getStateForBuffer());
 				} else {
-					if ((metaState & META_ALT_MASK) != 0) {
-						((vt320) buffer).keyPressed(vt320.KEY_END, ' ',
-								getStateForBuffer());
-					} else {
-						((vt320) buffer).keyPressed(vt320.KEY_RIGHT, ' ',
-								getStateForBuffer());
-					}
-					metaState &= ~META_TRANSIENT;
-					bridge.tryKeyVibrate();
+					((vt320) buffer).keyPressed(vt320.KEY_RIGHT, ' ',
+							getStateForBuffer());
 				}
+				metaState &= ~META_TRANSIENT;
+				bridge.tryKeyVibrate();
 				return true;
-
 			case KeyEvent.KEYCODE_DPAD_CENTER:
 			case KeyEvent.KEYCODE_SWITCH_CHARSET:
 				if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET && !prefs.getBoolean("xperiaProFix", false))
 					return true;
-				if (bridge.isSelectingForCopy()) {
-					if (selectionArea.isSelectingOrigin())
-						selectionArea.finishSelectingOrigin();
-					else {
-						if (clipboard != null) {
-							// copy selected area to clipboard
-							String copiedText = selectionArea.copyFrom(buffer);
-
-							clipboard.setText(copiedText);
-							//Nofify user
-							((TerminalView) v).notifyUser(manager.res.getString(
-									R.string.console_copy_done,copiedText.length() ) );
-							bridge.setSelectingForCopy(false);
-							selectionArea.reset();
-						}
-					}
-				} else {
-					if ((metaState & META_CTRL_ON) != 0) {
-						sendEscape();
-						metaState &= ~META_CTRL_ON;
-					} else
-						metaPress(META_CTRL_ON);
-				}
+				if ((metaState & META_CTRL_ON) != 0) {
+					sendEscape();
+					metaState &= ~META_CTRL_ON;
+				} else
+					metaPress(META_CTRL_ON);
 				bridge.redraw();
 				return true;
 
@@ -556,6 +563,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					bridge.redraw();
 					return true;
 				}
+				break;
 
 			case KeyEvent.KEYCODE_Z:
 				if(prefs.getBoolean("xperiaProFix", false)) {
@@ -564,9 +572,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 					bridge.redraw();
 					return true;
 				}
-
-			bridge.redraw();
-			return true;
+				break;
 			}
 
 		} catch (IOException e) {
@@ -764,23 +770,25 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 		urlDialog.setTitle(R.string.console_menu_urlscan);
 
 		ListView urlListView = new ListView(v.getContext());
-		URLItemListener urlListener = new URLItemListener(v.getContext());
+		URLItemListener urlListener = new URLItemListener(v.getContext(),urlDialog);
 		urlListView.setOnItemClickListener(urlListener);
+		urlListView.setOnItemLongClickListener(urlListener);
 
 		urlListView.setAdapter(new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_list_item_1, urls));
 		urlDialog.setContentView(urlListView);
 		urlDialog.show();
 	}
 
-	private class URLItemListener implements OnItemClickListener {
+	private class URLItemListener implements OnItemClickListener, OnItemLongClickListener {
 		private WeakReference<Context> contextRef;
+		private Dialog urlDialog;
 
-		URLItemListener(Context context) {
+		URLItemListener(Context context, Dialog urlDialog) {
 			this.contextRef = new WeakReference<Context>(context);
+			this.urlDialog = urlDialog;
 		}
 
-		public void onItemClick(AdapterView<?> arg0, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 			Context context = contextRef.get();
 
 			if (context == null)
@@ -797,10 +805,33 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				context.startActivity(intent);
 			} catch (Exception e) {
 				Log.e(TAG, "couldn't open URL", e);
-				// We should probably tell the user that we couldn't find a
-				// handler...
+				// We should probably tell the user that we couldn't find a handler...
+				Toast.makeText(context, "ERROR: Couldn't open URL", Toast.LENGTH_SHORT).show();
 			}
 		}
+
+        public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) {
+			Context context = contextRef.get();
+
+			if (context == null)
+				return false;
+			try {
+
+				String url = ((TextView) v).getText().toString();
+				if (url.indexOf("://") < 0)
+					url = "http://" + url;
+
+				clipboard.setText(url);
+				Toast.makeText(context, "URL is copied to clipboard", Toast.LENGTH_SHORT).show();
+				urlDialog.dismiss();
+				return true;
+
+			} catch (Exception e) {
+				Log.e(TAG, "couldn't copy URL", e);
+				Toast.makeText(context, "ERROR: Couldn't copy URL", Toast.LENGTH_SHORT).show();
+			}
+			return false;
+        }
 
 	}
 }
