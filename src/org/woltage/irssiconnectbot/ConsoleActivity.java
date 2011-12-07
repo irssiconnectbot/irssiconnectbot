@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -246,6 +247,10 @@ public class ConsoleActivity extends Activity {
 	protected void hideAllPrompts() {
 		stringPromptGroup.setVisibility(View.GONE);
 		booleanPromptGroup.setVisibility(View.GONE);
+		// adjust screen size if it was changed during prompt input
+		View view = findCurrentView(R.id.console_flip);
+		if(!(view instanceof TerminalView)) return;
+		((TerminalView)view).bridge.parentChanged((TerminalView)view);
 	}
 
 	// more like configureLaxMode -- enable network IO on UI thread
@@ -588,18 +593,42 @@ public class ConsoleActivity extends Activity {
 		resize.setEnabled(sessionOpen);
 		resize.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
-				int width = new Integer(prefs.getString("force_width", "0"));
-				int height = new Integer(prefs.getString("force_height", "0"));
+				final TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
 
-				if(width > 0 && height > 0) {
-					terminalView.forceSize(width, height);
-					terminalView.forceSize(width, height);
-				} else {
-					new AlertDialog.Builder(ConsoleActivity.this)
-						.setMessage("Goto settings and add width/height values.")
-						.setTitle("No configuration")
-						.show();
-				}
+				final View resizeView = inflater.inflate(R.layout.dia_resize, null, false);
+				((EditText) resizeView.findViewById(R.id.width))
+					.setText(prefs.getString("default_fsize_width", "80"));
+				((EditText) resizeView.findViewById(R.id.height))
+					.setText(prefs.getString("default_fsize_height", "25"));
+
+				new AlertDialog.Builder(ConsoleActivity.this)
+					.setView(resizeView)
+					.setPositiveButton(R.string.button_resize, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							int width, height;
+							try {
+								width = Integer.parseInt(((EditText) resizeView
+										.findViewById(R.id.width))
+										.getText().toString());
+								height = Integer.parseInt(((EditText) resizeView
+										.findViewById(R.id.height))
+										.getText().toString());
+							} catch (NumberFormatException nfe) {
+								// TODO change this to a real dialog where we can
+								// make the input boxes turn red to indicate an error.
+								return;
+							}
+							if (width > 0 && height > 0)
+								terminalView.forceSize(width, height);
+								terminalView.bridge.parentChanged(terminalView);
+							else {
+								new AlertDialog.Builder(ConsoleActivity.this)
+									.setMessage("Width and height must be higher than zero.")
+									.setTitle("Error")
+									.show();
+							}
+						}
+					}).setNegativeButton(android.R.string.cancel, null).create().show();
 
 				return true;
 			}
