@@ -150,7 +150,7 @@ class ICBSimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener
 			 */
 	@Override
 	public void onLongPress(MotionEvent e) {
-		if(consoleActivity.prefs.getBoolean("longPressMenu", false)) {
+		if(consoleActivity.prefs.getBoolean("longPressMenu", true)) {
 			View flip = consoleActivity.findCurrentView(R.id.console_flip);
 			if (flip == null) return;
 			TerminalView terminal = (TerminalView) flip;
