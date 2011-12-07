@@ -106,7 +106,7 @@ class ICBOnTouchListener implements View.OnTouchListener {
 			}
 		}
 
-		Configuration config = consoleActivity.getResources().getConfiguration();
+		//Configuration config = consoleActivity.getResources().getConfiguration();
 
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			lastX = event.getX();

@@ -405,6 +405,9 @@ public class HostListActivity extends ListActivity {
 			return false;
 		}
 
+		if (hostdb == null)
+			hostdb = new HostDatabase(this);
+
 		HostBean host = TransportFactory.findHost(hostdb, uri);
 		if (host == null) {
 			host = TransportFactory.getTransport(uri.getScheme()).createHost(uri);
