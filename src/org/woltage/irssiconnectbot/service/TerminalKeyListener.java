@@ -78,6 +78,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 	// backport constants from api level 11
 	public final static int KEYCODE_ESCAPE = 111;
 	public final static int HC_META_CTRL_ON = 4096;
+	public final static int KEYCODE_PAGE_UP = 92;
+	public final static int KEYCODE_PAGE_DOWN = 93;
 
 	// All the transient key codes
 	public final static int META_TRANSIENT = META_CTRL_ON | META_ALT_ON
@@ -457,11 +459,11 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			case KeyEvent.KEYCODE_TAB:
 				bridge.transport.write(0x09);
 				return true;
-			case KeyEvent.KEYCODE_PAGE_DOWN:
-				((vt320)buffer).keyTyped(vt320.KEY_PAGE_DOWN, ' ', getStateForBuffer());
+			case KEYCODE_PAGE_DOWN:
+				((vt320)buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ', 0);
 				return true;
-			case KeyEvent.KEYCODE_PAGE_UP:
-				((vt320)buffer).keyTyped(vt320.KEY_PAGE_UP, ' ', getStateForBuffer());
+			case KEYCODE_PAGE_UP:
+				((vt320)buffer).keyPressed(vt320.KEY_PAGE_UP, ' ', 0);
 				return true;
 			case KeyEvent.KEYCODE_CAMERA:
 				// check to see which shortcut the camera button triggers
