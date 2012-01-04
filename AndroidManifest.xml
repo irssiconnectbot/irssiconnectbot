@@ -49,7 +49,7 @@
                  android:description="@string/service_desc"/>
 
         <activity android:name=".ConsoleActivity" android:configChanges="keyboardHidden|orientation"
-                  android:theme="@style/NoTitle" android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+                  android:theme="@android:style/Theme.Holo.NoActionBar" android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
                   android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
