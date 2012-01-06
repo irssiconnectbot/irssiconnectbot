@@ -27,6 +27,7 @@ import org.woltage.irssiconnectbot.util.PreferenceConstants;
 import com.bugsense.trace.BugSenseHandler;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ActionBar;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -274,6 +275,21 @@ public class ConsoleActivity extends Activity {
 
 		clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		// hide action bar if requested by user
+		try
+		{
+			ActionBar actionBar = getActionBar();
+			if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true))
+			{
+				actionBar.hide();
+			}
+		}
+		catch (NoSuchMethodError error)
+		{
+			Log.w(TAG, "Android sdk version pre 11.	Not touching ActionBar.");
+		}
+
 
 		// hide status bar if requested by user
 		if (prefs.getBoolean(PreferenceConstants.FULLSCREEN, false)) {
