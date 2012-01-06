@@ -198,6 +198,11 @@
 	<!-- Summary for the haptic feedback (bumpy arrow) preference -->
 	<string name="pref_bumpyarrows_summary">"Vibrate when sending arrow keys from trackball; useful for laggy connections"</string>
 
+  <!-- Name for the action bar preference -->
+  <string name="pref_actionbar_title">"Action Bar"</string>
+  <!-- Sumary for the action bar preference -->
+  <string name="pref_actionbar_summary">"Display Action Bar in a session.  Note: Honeycomb and Ice Cream Sandwich users may need the Action Bar to access the menu."</string>
+
 	<!-- Category title for the Terminal Bell preferences -->
 	<string name="pref_bell_category">"Terminal bell"</string>
 
