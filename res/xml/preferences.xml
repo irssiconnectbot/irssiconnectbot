@@ -66,7 +66,8 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
-		android:title="@string/pref_ui_category">
+		android:title="@string/pref_ui_category"
+    android:key="pref_ui_category">
 
 		<ListPreference
 			android:key="rotation"
@@ -122,6 +123,14 @@
 			android:summary="@string/pref_bumpyarrows_summary"
 			android:defaultValue="true"
 			/>
+
+    <CheckBoxPreference
+      android:key="actionbarsetting"
+      android:title="@string/pref_actionbar_title"
+      android:summary="@string/pref_actionbar_summary"
+      android:defaultValue="true"
+      />
+    
 	</PreferenceCategory>
 
 	<PreferenceCategory

@@ -20,8 +20,11 @@ package org.woltage.irssiconnectbot;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -51,8 +54,19 @@ public class SettingsActivity extends PreferenceActivity {
 			editor.commit();
 
 			addPreferencesFromResource(R.xml.preferences);
+
+			// Check version of Android running on device and display Action Bar preference accordingly
+			// This can be extended to hide other HoneyComb or greater settings
+
 		}
 
+		int sdkVersion = Integer.parseInt(Build.VERSION.SDK);
+		if (sdkVersion < Build.VERSION_CODES.HONEYCOMB)
+		{
+			PreferenceCategory uiCategory = (PreferenceCategory) findPreference("pref_ui_category");
+			CheckBoxPreference actionBarCheckBox = (CheckBoxPreference) findPreference("actionbarsetting");
+			uiCategory.removePreference(actionBarCheckBox);
+		}
 		// TODO: add parse checking here to make sure we have integer value for scrollback
 
 	}
