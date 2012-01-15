@@ -38,6 +38,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -268,6 +269,8 @@ public class ConsoleActivity extends Activity {
 		configureStrictMode();
 		hardKeyboard = getResources().getConfiguration().keyboard ==
 				Configuration.KEYBOARD_QWERTY;
+
+        hardKeyboard = hardKeyboard && !Build.MODEL.startsWith("Transformer");
 
 		this.setContentView(R.layout.act_console);
         	BugSenseHandler.setup(this, "d27a12dc");
