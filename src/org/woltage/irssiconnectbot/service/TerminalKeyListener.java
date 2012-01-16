@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
@@ -122,6 +123,8 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
 		hardKeyboard = (manager.res.getConfiguration().keyboard
 				== Configuration.KEYBOARD_QWERTY);
+
+        hardKeyboard = hardKeyboard && !Build.MODEL.startsWith("Transformer");
 
 		updateKeymode();
 	}
@@ -240,8 +243,6 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
             		bridge.redraw();
             	}
             	return true;
-    		}else if(keyCode == KeyEvent.KEYCODE_SEARCH) {
-    			urlScan(v);
     		}
 
 			// otherwise pass through to existing session
@@ -270,7 +271,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				}
 
 				// handle pressing f-keys
-				if ((hardKeyboard && !hardKeyboardHidden)
+                if ((hardKeyboard && !hardKeyboardHidden)
 						&& (curMetaState & KeyEvent.META_SHIFT_ON) != 0
 						&& sendFunctionKey(keyCode))
 					return true;
@@ -331,7 +332,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			}
 
 			// send ctrl and meta-keys as appropriate
-			if (!hardKeyboard || hardKeyboardHidden) {
+            if (!hardKeyboard || hardKeyboardHidden) {
 				int k = event.getUnicodeChar(0);
 				int k0 = k;
 				boolean sendCtrl = false;
@@ -454,17 +455,34 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			// look for special chars
 			switch(keyCode) {
 			case KEYCODE_ESCAPE:
-				sendEscape();
-				return true;
+            case KeyEvent.KEYCODE_SEARCH:
+                    sendEscape();
+                    return true;
 			case KeyEvent.KEYCODE_TAB:
 				bridge.transport.write(0x09);
 				return true;
 			case KEYCODE_PAGE_DOWN:
-				((vt320)buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ', 0);
+				((vt320)buffer).keyPressed(vt320.KEY_PAGE_DOWN, ' ', getStateForBuffer());
+                metaState &= ~META_TRANSIENT;
+                bridge.tryKeyVibrate();
 				return true;
 			case KEYCODE_PAGE_UP:
-				((vt320)buffer).keyPressed(vt320.KEY_PAGE_UP, ' ', 0);
+				((vt320)buffer).keyPressed(vt320.KEY_PAGE_UP, ' ', getStateForBuffer());
+                metaState &= ~META_TRANSIENT;
+                bridge.tryKeyVibrate();
 				return true;
+            case KeyEvent.KEYCODE_MOVE_HOME:
+                ((vt320)buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
+                bridge.transport.write("[1~".getBytes());
+                metaState &= ~META_TRANSIENT;
+                bridge.tryKeyVibrate();
+                return true;
+            case KeyEvent.KEYCODE_MOVE_END:
+                ((vt320)buffer).keyTyped(vt320.KEY_ESCAPE, ' ', 0);
+                bridge.transport.write("[4~".getBytes());
+                metaState &= ~META_TRANSIENT;
+                bridge.tryKeyVibrate();
+                return true;
 			case KeyEvent.KEYCODE_CAMERA:
 				// check to see which shortcut the camera button triggers
 				String camera = manager.prefs.getString(
