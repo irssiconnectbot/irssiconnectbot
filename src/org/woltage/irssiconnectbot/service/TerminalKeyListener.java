@@ -456,7 +456,14 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			switch(keyCode) {
 			case KEYCODE_ESCAPE:
             case KeyEvent.KEYCODE_SEARCH:
-                    sendEscape();
+                    if(prefs.getString("searchbutton", "urlscan").equals("tab")) {
+                        bridge.transport.write(0x09);
+                    } else if(prefs.getString("searchbutton", "urlscan").equals("meta")) {
+                        sendEscape();
+                    } else {
+                        urlScan(v);
+                    }
+
                     return true;
 			case KeyEvent.KEYCODE_TAB:
 				bridge.transport.write(0x09);

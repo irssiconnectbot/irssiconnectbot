@@ -184,7 +184,15 @@
 		android:entryValues="@array/list_desirez_fixes_values"
 		android:defaultValue="false"
 		android:key="htcDesireZfix"/>
-		
+
+    <ListPreference
+    		android:key="searchbutton"
+    		android:title="@string/pref_searchbutton"
+    		android:entries="@array/list_searchbutton"
+    		android:entryValues="@array/list_searchbutton_values"
+    		android:summary="@string/pref_searchbutton_summary"
+    		android:defaultValue="urlscan"
+    		/>
 	<CheckBoxPreference
 		android:key="xperiaProFix"
 		android:title="@string/pref_xperiapro_title"

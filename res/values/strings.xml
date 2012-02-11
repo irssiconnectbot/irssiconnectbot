@@ -478,6 +478,14 @@
 	<string name="list_swipe_irssi_channel">Irssi channel swipe</string>
 	<string name="list_swipe_irssi_channel_inverted">Irssi channel swipe (inverted)</string>
 	
+    
+    <!-- Search button type -->
+    <string name="pref_searchbutton">Search button</string>
+    <string name="pref_searchbutton_summary">Change behavior of the search button</string>
+    <string name="list_searchbutton_meta">META (alt)</string>
+    <string name="list_searchbutton_tab">TAB</string>
+    <string name="list_searchbutton_urlscan">URL Scan</string>
+
 	<!-- Long press menu -->
 	<string name="pref_longpressmenu_title">Long press menu</string>
 	<string name="pref_longpressmenu_summary">Enables long press menu</string>

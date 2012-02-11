@@ -150,6 +150,19 @@
 		<item>channel_swipe</item>
 		<item>channel_swipe_inverted</item>
 	</string-array>
+
+    <string-array name="list_searchbutton">
+  		<item>@string/list_searchbutton_meta</item>
+  		<item>@string/list_searchbutton_tab</item>
+  		<item>@string/list_searchbutton_urlscan</item>
+  	</string-array>
+
+    <string-array name="list_searchbutton_values">
+        <item>meta</item>
+        <item>tab</item>
+        <item>urlscan</item>
+    </string-array>
+
 	<string-array name="list_desirez_fixes">
 		<item>Disabled</item>
 		<item>All fixes (Æ = Alt, Ø = Ctrl)</item>

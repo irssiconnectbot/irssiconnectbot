@@ -280,16 +280,12 @@ public class ConsoleActivity extends Activity {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		// hide action bar if requested by user
-		try
-		{
+		try {
 			ActionBar actionBar = getActionBar();
-			if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true))
-			{
+			if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
 				actionBar.hide();
 			}
-		}
-		catch (NoSuchMethodError error)
-		{
+		} catch (NoSuchMethodError error) {
 			Log.w(TAG, "Android sdk version pre 11.	Not touching ActionBar.");
 		}
 
@@ -411,13 +407,14 @@ public class ConsoleActivity extends Activity {
 				final TerminalView terminal = (TerminalView)flip;
 				Thread promptThread = new Thread(new Runnable() {
 						public void run() {
-							String inj = getCurrentPromptHelper().requestStringPrompt(null, "");
-							terminal.bridge.injectString(inj);
+                            String inj = getCurrentPromptHelper().requestStringPrompt(null, "");
+                            terminal.bridge.injectString(inj);
 						}
 					});
 				promptThread.setName("Prompt");
 				promptThread.setDaemon(true);
 				promptThread.start();
+
 				keyboardGroup.setVisibility(View.GONE);
 			}
 		});
@@ -1022,5 +1019,4 @@ public class ConsoleActivity extends Activity {
 			updateEmptyVisible();
 		}
 	}
-
 }
