@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           android:versionName="1.7.1-irssi"
-          android:versionCode="392"
+          android:versionCode="393"
           android:installLocation="auto"
           package="org.woltage.irssiconnectbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.android.com/apk/res/android ">
