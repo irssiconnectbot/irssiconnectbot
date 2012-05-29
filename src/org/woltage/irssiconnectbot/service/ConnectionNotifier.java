@@ -63,7 +63,7 @@ public abstract class ConnectionNotifier {
 		return notification;
 	}
 
-	protected Notification newActivityNotification(Context context, HostBean host) {
+	protected Notification newActivityNotification(Context context, HostBean host, boolean sound) {
 		Notification notification = newNotification(context);
 
 		Resources res = context.getResources();
@@ -82,7 +82,7 @@ public abstract class ConnectionNotifier {
 
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 
-		notification.flags |= Notification.DEFAULT_LIGHTS;
+		notification.defaults |= Notification.DEFAULT_LIGHTS;
 		if (HostDatabase.COLOR_RED.equals(host.getColor()))
 			notification.ledARGB = Color.RED;
 		else if (HostDatabase.COLOR_GREEN.equals(host.getColor()))
@@ -94,6 +94,8 @@ public abstract class ConnectionNotifier {
 		notification.ledOnMS = 300;
 		notification.ledOffMS = 1000;
 		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+		if (sound)
+			notification.defaults |= Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 
 		return notification;
 	}
@@ -119,8 +121,8 @@ public abstract class ConnectionNotifier {
 		return notification;
 	}
 
-	public void showActivityNotification(Service context, HostBean host) {
-		getNotificationManager(context).notify(ACTIVITY_NOTIFICATION, newActivityNotification(context, host));
+	public void showActivityNotification(Service context, HostBean host, boolean sound) {
+		getNotificationManager(context).notify(ACTIVITY_NOTIFICATION, newActivityNotification(context, host, sound));
 	}
 
 	public void hideActivityNotification(Service context) {

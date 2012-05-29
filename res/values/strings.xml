@@ -503,5 +503,7 @@
 	<string name="pref_default_fsize_width">Default width for force size</string>
 	<string name="pref_default_fsize_width_summary">Default screen width in rows for force resize</string>
 	<string name="pref_default_fsize_height">Default height for force size</string>
-	<string name="pref_default_fsize_height_summary">Default screen height in columns for force resize</string>		
+	<string name="pref_default_fsize_height_summary">Default screen height in columns for force resize</string>
+	<string name="pref_bell_notification_sound_title">Use notification sound</string>
+	<string name="pref_bell_notification_sound_summary">Use system-wide settings for sound and vibration</string>		
 </resources>
