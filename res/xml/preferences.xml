@@ -159,6 +159,7 @@
 			android:summary="@string/pref_bell_notification_summary"
 			android:defaultValue="false"
 			/>
+		<CheckBoxPreference android:key="bellNotificationSound" android:summary="@string/pref_bell_notification_sound_summary" android:title="@string/pref_bell_notification_sound_title"/>
 
 	</PreferenceCategory>
 	<ListPreference
