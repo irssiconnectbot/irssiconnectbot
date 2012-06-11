@@ -343,6 +343,12 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 			if (bridges.size() == 0 &&
 					mPendingReconnect.size() == 0) {
 				shouldHideRunningNotification = true;
+                // lock keys
+                if( loadedKeypairs != null && loadedKeypairs.size() > 0 ) {
+                    for( String nickname : loadedKeypairs.keySet() ) {
+                        removeKey(nickname);
+                    }
+                }
 			}
 		}
 
