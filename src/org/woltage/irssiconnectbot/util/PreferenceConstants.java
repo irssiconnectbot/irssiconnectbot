@@ -78,6 +78,7 @@ public class PreferenceConstants {
 	public static final String BELL_VOLUME = "bellVolume";
 	public static final String BELL_VIBRATE = "bellVibrate";
 	public static final String BELL_NOTIFICATION = "bellNotification";
+	public static final String BELL_NOTIFICATION_SOUND = "bellNotificationSound";
 	public static final float DEFAULT_BELL_VOLUME = 0.25f;
 
 	public static final String CONNECTION_PERSIST = "connPersist";

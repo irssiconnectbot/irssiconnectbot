@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Map.Entry;
 
 import org.woltage.irssiconnectbot.R;
 import org.woltage.irssiconnectbot.bean.HostBean;
@@ -598,7 +598,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		if (!prefs.getBoolean(PreferenceConstants.BELL_NOTIFICATION, false))
 			return;
 
-		ConnectionNotifier.getInstance().showActivityNotification(this, host);
+		ConnectionNotifier.getInstance().showActivityNotification(this, host, prefs.getBoolean(PreferenceConstants.BELL_NOTIFICATION_SOUND, false));
 	}
 
 	/* (non-Javadoc)
