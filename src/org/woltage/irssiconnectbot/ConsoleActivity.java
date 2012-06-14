@@ -633,6 +633,10 @@ public class ConsoleActivity extends Activity {
 				TerminalBridge bridge = terminalView.bridge;
 
 				bridge.dispatchDisconnect(true);
+
+                if( bound != null ) {
+                    bound.lockUnusedKeys();
+                }
 				return true;
 			}
 		});
