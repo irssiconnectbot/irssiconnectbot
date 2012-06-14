@@ -83,12 +83,16 @@ import com.trilead.ssh2.crypto.PEMStructure;
 public class PubkeyListActivity extends ListActivity implements EventListener {
 	public final static String TAG = "ConnectBot.PubkeyListActivity";
 
+    public static final String PICK_MODE = "pickmode";
+
 	private static final int MAX_KEYFILE_SIZE = 8192;
 	private static final int REQUEST_CODE_PICK_FILE = 1;
 
 	// Constants for AndExplorer's file picking intent
 	private static final String ANDEXPLORER_TITLE = "explorer_title";
 	private static final String MIME_TYPE_ANDEXPLORER_FILE = "vnd.android.cursor.dir/lysesoft.andexplorer.file";
+
+    public static final String PICKED_PUBKEY_ID = "pubkey_id";
 
 	protected PubkeyDatabase pubkeydb;
 	private List<PubkeyBean> pubkeys;
@@ -154,6 +158,8 @@ public class PubkeyListActivity extends ListActivity implements EventListener {
 
 		registerForContextMenu(getListView());
 
+        final boolean pickMode = getIntent().getBooleanExtra( PICK_MODE, false );
+
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 				PubkeyBean pubkey = (PubkeyBean) getListView().getItemAtPosition(position);
@@ -161,9 +167,19 @@ public class PubkeyListActivity extends ListActivity implements EventListener {
 
 				// handle toggling key in-memory on/off
 				if(loaded) {
-					bound.removeKey(pubkey.getNickname());
-					updateHandler.sendEmptyMessage(-1);
-				} else {
+
+                    if (pickMode) {
+                        Intent intent = new Intent();
+                        intent.putExtra(PICKED_PUBKEY_ID, pubkey.getId());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        bound.removeKey(pubkey.getNickname());
+                        updateHandler.sendEmptyMessage(-1);
+                    }
+
+
+                } else {
 					handleAddKey(pubkey);
 				}
 
@@ -508,7 +524,7 @@ public class PubkeyListActivity extends ListActivity implements EventListener {
 	}
 
 	/**
-	 * @param name
+	 * @param file
 	 */
 	private void readKeyFromFile(File file) {
 		PubkeyBean pubkey = new PubkeyBean();
