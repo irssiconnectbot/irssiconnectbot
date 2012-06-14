@@ -17,6 +17,7 @@
 
 package org.woltage.irssiconnectbot;
 
+import org.woltage.irssiconnectbot.bean.PubkeyBean;
 import org.woltage.irssiconnectbot.bean.SelectionArea;
 import org.woltage.irssiconnectbot.service.PromptHelper;
 import org.woltage.irssiconnectbot.service.TerminalBridge;
@@ -73,11 +74,20 @@ import android.widget.ViewFlipper;
 import com.nullwire.trace.ExceptionHandler;
 
 import de.mud.terminal.vt320;
+import org.woltage.irssiconnectbot.util.PubkeyDatabase;
+import org.woltage.irssiconnectbot.util.PubkeyUtils;
+
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 
 public class ConsoleActivity extends Activity {
 	public final static String TAG = "ConnectBot.ConsoleActivity";
 
 	protected static final int REQUEST_EDIT = 1;
+    protected static final int REQUEST_SELECT = 2;
 
 	protected static final int CLICK_TIME = 400;
 	protected static final float MAX_CLICK_DISTANCE = 25f;
@@ -755,6 +765,19 @@ public class ConsoleActivity extends Activity {
 			}
 		});
 
+        MenuItem keys = menu.add(R.string.console_menu_pubkeys);
+        keys.setIcon(android.R.drawable.ic_lock_lock);
+        keys.setIntent(new Intent(this, PubkeyListActivity.class));
+        keys.setEnabled(activeTerminal);
+        keys.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(ConsoleActivity.this, PubkeyListActivity.class);
+                intent.putExtra(PubkeyListActivity.PICK_MODE, true);
+                ConsoleActivity.this.startActivityForResult(intent, REQUEST_SELECT);
+                return true;
+            }
+        });
+
 		return true;
 	}
 
@@ -1124,4 +1147,52 @@ public class ConsoleActivity extends Activity {
 			updateEmptyVisible();
 		}
 	}
+
+    /*
+    * (non-Javadoc)
+    *
+    * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+    */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_SELECT:
+                if (resultCode == Activity.RESULT_OK) {
+                    long pubkeyId = data.getLongExtra( PubkeyListActivity.PICKED_PUBKEY_ID, -1 );
+                    PubkeyDatabase pubkeyDatabase = new PubkeyDatabase(this);
+                    PubkeyBean pubkey = pubkeyDatabase.findPubkeyById(pubkeyId);
+                    setupPublicKey( pubkey );
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+
+        }
+    }
+
+
+    /**
+     * @param pubkey
+     */
+    private void setupPublicKey(PubkeyBean pubkey) {
+        Log.d(TAG, "setupPublicKey, pubKey=" + pubkey.getNickname());
+
+        try {
+            PublicKey pk = PubkeyUtils.decodePublic(pubkey.getPublicKey(), pubkey.getType());
+            String openSSHPubkey = PubkeyUtils.convertToOpenSSHFormat(pk, pubkey.getNickname());
+
+            final TerminalView terminal = (TerminalView) findCurrentView(R.id.console_flip);
+            terminal.bridge.injectString("mkdir .ssh -pm 700 ; echo " + openSSHPubkey + " >> ~/.ssh/authorized_keys");
+        } catch (InvalidKeyException e) {
+            Log.e(TAG, e.getMessage(), e);
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, e.getMessage(), e);
+        } catch (InvalidKeySpecException e) {
+            Log.e(TAG, e.getMessage(), e);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+
+    }
 }
