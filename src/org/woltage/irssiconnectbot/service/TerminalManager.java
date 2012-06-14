@@ -21,14 +21,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.woltage.irssiconnectbot.R;
 import org.woltage.irssiconnectbot.bean.HostBean;
@@ -471,7 +465,22 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		}
 	}
 
-	public class TerminalBinder extends Binder {
+    /**
+     * locks the keys if terminals are disconnected
+     */
+    public void lockUnusedKeys() {
+        if (bridges.size() == 0 && mPendingReconnect.size() == 0) {
+            // terminals are disconnected with no reconnecting requested
+            if( loadedKeypairs != null && loadedKeypairs.size() > 0 ) {
+                Collection<String> nicknames = new HashSet<String>(loadedKeypairs.keySet());
+                for( String nickname : nicknames ) {
+                    removeKey(nickname);
+                }
+            }
+        }
+    }
+
+    public class TerminalBinder extends Binder {
 		public TerminalManager getService() {
 			return TerminalManager.this;
 		}
