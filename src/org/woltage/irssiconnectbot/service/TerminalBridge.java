@@ -929,7 +929,7 @@ public class TerminalBridge implements VDUDisplay {
 		if (urlPattern == null) {
 			// based on http://www.ietf.org/rfc/rfc2396.txt
 			String scheme = "[A-Za-z][-+.0-9A-Za-z]*";
-			String unreserved = "[-._~0-9A-ZÅÄÖa-zåäö]";
+			String unreserved = "[-._~0-9A-ZÅÄÖa-zåäö\\[\\]]";
 			String pctEncoded = "%[0-9A-Fa-f]{2}";
 			String subDelims = "[!$&'()*+,;:=]";
 			String userinfo = "(?:" + unreserved + "|" + pctEncoded + "|" + subDelims + "|:)*";
