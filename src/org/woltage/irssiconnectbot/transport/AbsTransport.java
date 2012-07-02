@@ -156,6 +156,10 @@ public abstract class AbsTransport {
 		this.manager = manager;
 	}
 
+    public String getHostProtocol() {
+        return this.host.getProtocol();
+    }
+
 	/**
 	 * Whether or not this transport type can forward ports.
 	 * @return true on ability to forward ports
