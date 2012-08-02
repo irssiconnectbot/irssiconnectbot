@@ -213,6 +213,29 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 	}
 
 	/**
+	 * Disconnect all currently connected bridges, except the local ones,
+     * used with connectivity changes.
+	 */
+	private void disconnectAllExceptLocal(final boolean immediate) {
+		TerminalBridge[] tmpBridges = null;
+
+		synchronized (bridges) {
+			if (bridges.size() > 0) {
+				tmpBridges = bridges.toArray(new TerminalBridge[bridges.size()]);
+			}
+		}
+
+		if (tmpBridges != null) {
+			// disconnect and dispose of any existing bridges except locals.
+			for (int i = 0; i < tmpBridges.length; i++) {
+                if( ! "local".equals( tmpBridges[i].transport.getHostProtocol() ) ) {
+                    tmpBridges[i].dispatchDisconnect(immediate);
+                }
+            }
+		}
+	}
+
+	/**
 	 * Open a new SSH session using the given parameters.
 	 */
 	private TerminalBridge openConnection(HostBean host) throws IllegalArgumentException, IOException {
@@ -669,7 +692,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 		final Thread t = new Thread() {
 			@Override
 			public void run() {
-				disconnectAll(false);
+				disconnectAllExceptLocal(false);
 			}
 		};
 		t.setName("Disconnector");
