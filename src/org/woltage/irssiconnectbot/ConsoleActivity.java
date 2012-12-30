@@ -25,7 +25,6 @@ import org.woltage.irssiconnectbot.service.TerminalKeyListener;
 import org.woltage.irssiconnectbot.service.TerminalManager;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 
-import com.bugsense.trace.BugSenseHandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ActionBar;
@@ -283,8 +282,6 @@ public class ConsoleActivity extends Activity {
         hardKeyboard = hardKeyboard && !Build.MODEL.startsWith("Transformer");
 
 		this.setContentView(R.layout.act_console);
-        	BugSenseHandler.setup(this, "d27a12dc");
-		ExceptionHandler.register(this);
 
 		clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);

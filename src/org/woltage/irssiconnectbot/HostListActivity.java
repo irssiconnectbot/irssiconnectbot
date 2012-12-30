@@ -19,7 +19,6 @@ package org.woltage.irssiconnectbot;
 
 import java.util.List;
 
-import com.bugsense.trace.BugSenseHandler;
 import org.woltage.irssiconnectbot.bean.HostBean;
 import org.woltage.irssiconnectbot.service.TerminalBridge;
 import org.woltage.irssiconnectbot.service.TerminalManager;
@@ -166,9 +165,7 @@ public class HostListActivity extends ListActivity {
 				getResources().getText(R.string.app_name),
 				getResources().getText(R.string.title_hosts_list)));
 
-        BugSenseHandler.setup(this, "f18d0d05");
 
-		ExceptionHandler.register(this);
 
 		// check for eula agreement
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
