@@ -29,6 +29,7 @@ import org.woltage.irssiconnectbot.bean.HostBean;
 import org.woltage.irssiconnectbot.bean.PubkeyBean;
 import org.woltage.irssiconnectbot.transport.TransportFactory;
 import org.woltage.irssiconnectbot.util.HostDatabase;
+import org.woltage.irssiconnectbot.util.KeyUtils;
 import org.woltage.irssiconnectbot.util.PreferenceConstants;
 import org.woltage.irssiconnectbot.util.PubkeyDatabase;
 import org.woltage.irssiconnectbot.util.PubkeyUtils;
@@ -134,11 +135,7 @@ public class TerminalManager extends Service implements BridgeDisconnectedListen
 
 		for (PubkeyBean pubkey : pubkeys) {
 			try {
-				PrivateKey privKey = PubkeyUtils.decodePrivate(pubkey.getPrivateKey(), pubkey.getType());
-				PublicKey pubKey = PubkeyUtils.decodePublic(pubkey.getPublicKey(), pubkey.getType());
-				Object trileadKey = PubkeyUtils.convertToTrilead(privKey, pubKey);
-
-				addKey(pubkey, trileadKey);
+				addKey(pubkey, KeyUtils.DecodeKey(pubkey, null));
 			} catch (Exception e) {
 				Log.d(TAG, String.format("Problem adding key '%s' to in-memory cache", pubkey.getNickname()), e);
 			}

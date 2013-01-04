@@ -34,6 +34,7 @@ import java.util.List;
 import org.openintents.intents.FileManagerIntents;
 import org.woltage.irssiconnectbot.bean.PubkeyBean;
 import org.woltage.irssiconnectbot.service.TerminalManager;
+import org.woltage.irssiconnectbot.util.KeyUtils;
 import org.woltage.irssiconnectbot.util.PubkeyDatabase;
 import org.woltage.irssiconnectbot.util.PubkeyUtils;
 
@@ -274,44 +275,20 @@ public class PubkeyListActivity extends ListActivity implements EventListener {
 	}
 
 	protected void handleAddKey(PubkeyBean pubkey, String password) {
-		Object trileadKey = null;
-		if(PubkeyDatabase.KEY_TYPE_IMPORTED.equals(pubkey.getType())) {
-			// load specific key using pem format
-			try {
-				trileadKey = PEMDecoder.decode(new String(pubkey.getPrivateKey()).toCharArray(), password);
-			} catch(Exception e) {
-				String message = getResources().getString(R.string.pubkey_failed_add, pubkey.getNickname());
-				Log.e(TAG, message, e);
-				Toast.makeText(PubkeyListActivity.this, message, Toast.LENGTH_LONG);
-			}
+		try {
+			Object trileadKey = KeyUtils.DecodeKey(pubkey, password);
 
-		} else {
-			// load using internal generated format
-			PrivateKey privKey = null;
-			PublicKey pubKey = null;
-			try {
-				privKey = PubkeyUtils.decodePrivate(pubkey.getPrivateKey(), pubkey.getType(), password);
-				pubKey = PubkeyUtils.decodePublic(pubkey.getPublicKey(), pubkey.getType());
-			} catch (Exception e) {
-				String message = getResources().getString(R.string.pubkey_failed_add, pubkey.getNickname());
-				Log.e(TAG, message, e);
-				Toast.makeText(PubkeyListActivity.this, message, Toast.LENGTH_LONG);
-				return;
-			}
+			Log.d(TAG, String.format("Unlocked key '%s'", pubkey.getNickname()));
 
-			// convert key to trilead format
-			trileadKey = PubkeyUtils.convertToTrilead(privKey, pubKey);
-			Log.d(TAG, "Unlocked key " + PubkeyUtils.formatKey(pubKey));
+			// save this key in memory
+			bound.addKey(pubkey, trileadKey, true);
+
+			updateHandler.sendEmptyMessage(-1);
+		} catch(Exception e) {
+			String message = getResources().getString(R.string.pubkey_failed_add, pubkey.getNickname());
+			Log.e(TAG, message, e);
+			Toast.makeText(PubkeyListActivity.this, message, Toast.LENGTH_LONG).show();
 		}
-
-		if(trileadKey == null) return;
-
-		Log.d(TAG, String.format("Unlocked key '%s'", pubkey.getNickname()));
-
-		// save this key in memory
-		bound.addKey(pubkey, trileadKey, true);
-
-		updateHandler.sendEmptyMessage(-1);
 	}
 
 	@Override
