@@ -363,6 +363,34 @@ public class HostListActivity extends ListActivity {
 		if (!TransportFactory.canForwardPorts(host.getProtocol()))
 			portForwards.setEnabled(false);
 
+		MenuItem copy = menu.add(R.string.list_host_copy);
+		copy.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			public boolean onMenuItemClick(MenuItem item) {
+				HostBean newhost = new HostBean();
+				newhost.setNickname(host.getNickname());
+				newhost.setUsername(host.getUsername());
+				newhost.setHostname(host.getHostname());
+				newhost.setPort(host.getPort());
+				newhost.setProtocol(host.getProtocol());
+				newhost.setHostKeyAlgo(host.getHostKeyAlgo());
+				newhost.setHostKey(host.getHostKey());
+				newhost.setColor(host.getColor());
+				newhost.setUseKeys(host.getUseKeys());
+				newhost.setUseAuthAgent(host.getUseAuthAgent());
+				newhost.setPostLogin(host.getPostLogin());
+				newhost.setPubkeyId(host.getPubkeyId());
+				newhost.setWantSession(host.getWantSession());
+				newhost.setDelKey(host.getDelKey());
+				newhost.setFontSize(host.getFontSize());
+				newhost.setCompression(host.getCompression());
+				newhost.setEncoding(host.getEncoding());
+				newhost.setStayConnected(host.getStayConnected());
+				hostdb.saveHost(newhost);
+				HostListActivity.this.updateList();
+				return true;
+			}
+		});
+
 		MenuItem delete = menu.add(R.string.list_host_delete);
 		delete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
