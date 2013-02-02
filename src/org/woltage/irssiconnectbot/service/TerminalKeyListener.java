@@ -183,12 +183,14 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 			}
 
 			// check for terminal resizing keys
-			if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-				bridge.increaseFontSize();
-				return true;
-			} else if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-				bridge.decreaseFontSize();
-				return true;
+			if (prefs.getBoolean("volumeKeysResize", true)) {
+				if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+					bridge.increaseFontSize();
+					return true;
+				} else if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+					bridge.decreaseFontSize();
+					return true;
+				}
 			}
 
 			// skip keys if we aren't connected yet or have been disconnected
@@ -466,6 +468,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 
                     return true;
 			case KeyEvent.KEYCODE_TAB:
+			case KeyEvent.KEYCODE_VOLUME_UP:
 				bridge.transport.write(0x09);
 				return true;
 			case KEYCODE_PAGE_DOWN:
@@ -573,6 +576,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
 				return true;
 			case KeyEvent.KEYCODE_DPAD_CENTER:
 			case KeyEvent.KEYCODE_SWITCH_CHARSET:
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
 				if (keyCode == KeyEvent.KEYCODE_SWITCH_CHARSET && !prefs.getBoolean("xperiaProFix", false))
 					return true;
 				if ((metaState & META_CTRL_ON) != 0) {

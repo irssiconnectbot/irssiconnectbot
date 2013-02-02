@@ -499,6 +499,10 @@
 	<!--  Sony Ericsson Xperia pro and Xperia mini pro -->
 	<string name="pref_xperiapro_title">Sony Ericsson Xperia (mini) pro fix</string>
 	<string name="pref_xperiapro_summary">Hardware keyboard fixes</string>
+
+	<!-- Should volume keys resize or act as tab and ctrl? -->
+	<string name="pref_volumeresize_title">Use volume keys to resize terminal</string>
+	<string name="pref_volumeresize_summary">If true, volume keys will resize the terminal. Otherwise, volume up will act as tab and down as ctrl</string>
 	
 	<!--  Force screen size -->
 	<string name="pref_default_fsize_category">Default values for force size</string>
