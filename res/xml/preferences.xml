@@ -194,11 +194,19 @@
     		android:summary="@string/pref_searchbutton_summary"
     		android:defaultValue="urlscan"
     		/>
+
 	<CheckBoxPreference
 		android:key="xperiaProFix"
 		android:title="@string/pref_xperiapro_title"
 		android:summary="@string/pref_xperiapro_summary"
 		android:defaultValue="false"
+		/>
+
+	<CheckBoxPreference
+		android:key="volumeKeysResize"
+		android:title="@string/pref_volumeresize_title"
+		android:summary="@string/pref_volumeresize_summary"
+		android:defaultValue="true"
 		/>
 		
 	<PreferenceCategory
