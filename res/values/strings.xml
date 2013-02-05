@@ -367,6 +367,7 @@
 	<string name="list_host_disconnect">"Disconnect"</string>
 	<string name="list_host_edit">"Edit host"</string>
 	<string name="list_host_portforwards">"Edit port forwards"</string>
+	<string name="list_host_copy">"Copy host"</string>
 	<string name="list_host_delete">"Delete host"</string>
 	<!-- Note that the '\n' splits the lines so it's actually "quick-connect box below to connect" -->
 	<string name="list_host_empty">"Use the quick-connect box"\n"below to connect to a host."</string>
