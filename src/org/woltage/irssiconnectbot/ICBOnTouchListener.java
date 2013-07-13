@@ -30,16 +30,28 @@ class ICBOnTouchListener implements View.OnTouchListener {
 
 	private final RelativeLayout keyboardGroup;
 	private final GestureDetector detect;
+	private final Handler handler = new Handler();
+	private final Runnable hider;
 
 	private float lastX, lastY;
 	private int lastTouchRow, lastTouchCol;
-	private Handler handler = new Handler();
 	private ConsoleActivity consoleActivity;
+
+	private class Hider implements Runnable {
+		public void run() {
+			if (keyboardGroup.getVisibility() == View.GONE)
+				return;
+
+			keyboardGroup.startAnimation(consoleActivity.keyboard_fade_out);
+			keyboardGroup.setVisibility(View.GONE);
+		}
+	}
 
 	public ICBOnTouchListener (ConsoleActivity consoleActivity, RelativeLayout keyboardGroup, GestureDetector detect) {
 		this.consoleActivity = consoleActivity;
 		this.keyboardGroup = keyboardGroup;
 		this.detect = detect;
+		this.hider = new Hider();
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
@@ -119,15 +131,7 @@ class ICBOnTouchListener implements View.OnTouchListener {
 			keyboardGroup.startAnimation(consoleActivity.keyboard_fade_in);
 			keyboardGroup.setVisibility(View.VISIBLE);
 
-			handler.postDelayed(new Runnable() {
-				public void run() {
-					if (keyboardGroup.getVisibility() == View.GONE)
-						return;
-
-					keyboardGroup.startAnimation(consoleActivity.keyboard_fade_out);
-					keyboardGroup.setVisibility(View.GONE);
-				}
-			}, ConsoleActivity.KEYBOARD_DISPLAY_TIME);
+			handler.postDelayed(this.hider, ConsoleActivity.KEYBOARD_DISPLAY_TIME);
 		}
 
 		// pass any touch events back to detector
