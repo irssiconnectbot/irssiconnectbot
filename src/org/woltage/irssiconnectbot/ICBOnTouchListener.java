@@ -17,6 +17,7 @@
 
 package org.woltage.irssiconnectbot;
 
+import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -30,6 +31,7 @@ class ICBOnTouchListener implements View.OnTouchListener {
 
 	private final RelativeLayout keyboardGroup;
 	private final GestureDetector detect;
+	private final ActionBar actionBar;
 	private final Handler handler = new Handler();
 	private final Runnable hider;
 
@@ -44,14 +46,31 @@ class ICBOnTouchListener implements View.OnTouchListener {
 
 			keyboardGroup.startAnimation(consoleActivity.keyboard_fade_out);
 			keyboardGroup.setVisibility(View.GONE);
+			if (actionBar != null) {
+				actionBar.hide();
+			}
 		}
 	}
 
-	public ICBOnTouchListener (ConsoleActivity consoleActivity, RelativeLayout keyboardGroup, GestureDetector detect) {
+	public ICBOnTouchListener (ConsoleActivity consoleActivity, RelativeLayout keyboardGroup,
+							   ActionBar actionBar, GestureDetector detect) {
 		this.consoleActivity = consoleActivity;
 		this.keyboardGroup = keyboardGroup;
+		this.actionBar = actionBar;
 		this.detect = detect;
 		this.hider = new Hider();
+
+		if (actionBar != null) {
+			actionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
+					public void onMenuVisibilityChanged(boolean isVisible) {
+						if (isVisible) {
+							handler.removeCallbacks(hider);
+						} else {
+							handler.postDelayed(hider, ConsoleActivity.KEYBOARD_DISPLAY_TIME);
+						}
+					}
+				});
+		}
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
@@ -130,6 +149,9 @@ class ICBOnTouchListener implements View.OnTouchListener {
 				&& Math.abs(event.getY() - lastY) < ConsoleActivity.MAX_CLICK_DISTANCE) {
 			keyboardGroup.startAnimation(consoleActivity.keyboard_fade_in);
 			keyboardGroup.setVisibility(View.VISIBLE);
+			if (actionBar != null) {
+				actionBar.show();
+			}
 
 			handler.postDelayed(this.hider, ConsoleActivity.KEYBOARD_DISPLAY_TIME);
 		}

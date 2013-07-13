@@ -58,6 +58,7 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -281,10 +282,14 @@ public class ConsoleActivity extends Activity {
 
         hardKeyboard = hardKeyboard && !Build.MODEL.startsWith("Transformer");
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
+			requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		}
+
 		this.setContentView(R.layout.act_console);
 
 		clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		// hide action bar if requested by user
 		try {
@@ -467,8 +472,8 @@ public class ConsoleActivity extends Activity {
 				new ICBSimpleOnGestureListener(this));
 
 		flip.setLongClickable(true);
-		flip.setOnTouchListener(new ICBOnTouchListener(this, keyboardGroup, detect));
-
+		ActionBar actionBar = prefs.getBoolean(PreferenceConstants.ACTIONBAR, true) ? null : getActionBar();
+		flip.setOnTouchListener(new ICBOnTouchListener(this, keyboardGroup, actionBar, detect));
 	}
 
 	/**
