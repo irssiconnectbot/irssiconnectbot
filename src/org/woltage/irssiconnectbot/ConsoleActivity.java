@@ -399,6 +399,9 @@ public class ConsoleActivity extends Activity {
 
 				inputManager.showSoftInput(flip, InputMethodManager.SHOW_FORCED);
 				keyboardGroup.setVisibility(View.GONE);
+				if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
+				    getActionBar().hide();
+				}
 			}
 		});
 
@@ -413,6 +416,9 @@ public class ConsoleActivity extends Activity {
 				TerminalKeyListener handler = terminal.bridge.getKeyHandler();
 				handler.showCharPickerDialog(terminal);
 				keyboardGroup.setVisibility(View.GONE);
+				if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
+				    getActionBar().hide();
+				}
 			}
 		});
 
@@ -435,6 +441,9 @@ public class ConsoleActivity extends Activity {
 				promptThread.start();
 
 				keyboardGroup.setVisibility(View.GONE);
+				if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
+				    getActionBar().hide();
+				}
 			}
 		});
 
@@ -450,6 +459,9 @@ public class ConsoleActivity extends Activity {
 				terminal.bridge.tryKeyVibrate();
 
 				keyboardGroup.setVisibility(View.GONE);
+				if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
+				    getActionBar().hide();
+				}
 			}
 		});
 
@@ -464,6 +476,9 @@ public class ConsoleActivity extends Activity {
 				handler.sendEscape();
 				terminal.bridge.tryKeyVibrate();
 				keyboardGroup.setVisibility(View.GONE);
+				if (!prefs.getBoolean(PreferenceConstants.ACTIONBAR, true)) {
+				    getActionBar().hide();
+				}
 			}
 		});
 
