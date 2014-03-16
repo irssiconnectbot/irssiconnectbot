@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="color_gray">"grey"</string>
+    <string name="hostpref_color_title">"Colour category"</string>
+    <string name="list_menu_sortcolor">"Sort by colour"</string>
+    <string name="title_colors">"Colours"</string>
+
+</resources>
