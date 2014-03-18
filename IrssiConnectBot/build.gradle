@@ -1,15 +1,35 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4'
+        classpath 'com.android.tools.build:gradle:0.4.2'
+        classpath 'com.novoda.gradle:robolectric-plugin:0.0.1-SNAPSHOT'
     }
 }
+
 apply plugin: 'android'
+apply plugin: 'robolectric'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
 
 dependencies {
-    compile files('libs/android-support-v4.jar')
+    //compile files('libs/android-support-v4.jar')
+
+    // had to deploy to sonatype to get AAR to work
+    compile 'com.novoda:actionbarsherlock:4.3.2-SNAPSHOT'
+
+    robolectricCompile 'org.robolectric:robolectric:2.0'
+    robolectricCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
 android {
@@ -18,6 +38,6 @@ android {
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 16
+        targetSdkVersion 17
     }
 }
