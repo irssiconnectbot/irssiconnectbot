@@ -523,7 +523,6 @@ public class ConsoleActivity extends Activity {
         ctrlKey.setIcon(R.drawable.button_ctrl)         ;
         ctrlKey.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         ctrlKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 View flip = findCurrentView(R.id.console_flip);
                 if (flip == null) return false;
@@ -542,7 +541,6 @@ public class ConsoleActivity extends Activity {
         escKey.setIcon(R.drawable.button_esc);
         escKey.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         escKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 View flip = findCurrentView(R.id.console_flip);
                 if (flip == null) return false;
@@ -561,7 +559,6 @@ public class ConsoleActivity extends Activity {
         symKey.setIcon(R.drawable.button_sym);
         symKey.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         symKey.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 View flip = findCurrentView(R.id.console_flip);
                 if (flip == null) return false;
@@ -579,7 +576,6 @@ public class ConsoleActivity extends Activity {
         inputButton.setIcon(R.drawable.button_input);
         inputButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         inputButton.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 View flip = findCurrentView(R.id.console_flip);
                 if (flip == null)
@@ -604,7 +600,6 @@ public class ConsoleActivity extends Activity {
         keyboard.setIcon(R.drawable.button_keyboard);
         keyboard.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         keyboard.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 View flip = findCurrentView(R.id.console_flip);
                 if (flip == null)
