@@ -6,7 +6,7 @@
           package="org.woltage.irssiconnectbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.android.com/apk/res/android ">
 
-    <uses-sdk android:targetSdkVersion="11" android:minSdkVersion="3"/>
+    <uses-sdk android:targetSdkVersion="11" android:minSdkVersion="4"/>
 
     <application
             android:icon="@drawable/icon"
